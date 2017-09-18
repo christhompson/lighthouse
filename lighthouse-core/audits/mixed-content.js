@@ -5,6 +5,16 @@
  */
 'use strict';
 
+/**
+ * This audit is supposed to compare the default pass with the mixed content
+ * pass and see which urls that aren't already over HTTPS are able to be
+ * switched over and which ones are still HTTP only. We do this with the
+ * network request Interceptor. However, in it's current state, it only prints
+ * out the resources that ARE available over HTTPS.
+ * TODO: compare resources from mixed content pass to default pass and identify
+ * which ones are HTTP that can be updated to HTTP and which ones cant.
+ */
+
 const Audit = require('./audit');
 const URL = require('../lib/url-shim');
 const Util = require('../report/v2/renderer/util');
@@ -24,7 +34,6 @@ class MixedContent extends Audit {
       description: 'MIXED CONTENT',
       failureDescription: 'MIXED CONTENT',
       helpText: 'Test help text here.',
-      //requiredArtifacts: ['MixedContent']
       requiredArtifacts: ['MixedContent', 'devtoolsLogs']
     };
   }

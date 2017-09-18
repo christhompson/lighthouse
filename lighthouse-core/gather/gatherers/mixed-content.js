@@ -9,9 +9,13 @@ const Gatherer = require('./gatherer');
 const DOMHelpers = require('../../lib/dom-helpers.js');
 
 /**
- * This gatherer changes the options.url so that its pass loads the http page.
- * After load it detects if its on a crypographic scheme.
- * TODO: Instead of abusing a loadPage pass for this test, it could likely just do an XHR instead
+ * This gatherer sets the Network requestInterceptor so that we can
+ * capture all requests, change them to HTTPS, and pass them along. In the audit
+ * we try to determine what mixed content is able to switch to HTTPS and which
+ * isn't.
+ * TODO: fix network interceptor and place the HTTPS version of the url into url.
+ * To the best of my knowledge it isn't
+ * actually intercepting, but this is the general gist of how you want to do it.
  */
 
 class MixedContent extends Gatherer {
