@@ -57,10 +57,22 @@ module.exports = {
     gatherers: [
       'http-redirect',
       'html-without-javascript',
+      'mixed-content',
+    ]
+  },
+  {
+    passName: 'mixedContentPass',
+    recordTrace: true,
+    useThrottling: false,
+    // Just wait for onload
+    networkQuietThresholdMs: 0,
+    gatherers: [
+      'mixed-content',
     ]
   }],
 
   audits: [
+    'mixed-content',
     'is-on-https',
     'redirects-http',
     'service-worker',
@@ -296,6 +308,7 @@ module.exports = {
         {id: 'no-document-write', weight: 1},
         {id: 'external-anchors-use-rel-noopener', weight: 1},
         {id: 'geolocation-on-start', weight: 1},
+        {id: 'mixed-content', weight: 1},
         {id: 'notification-on-start', weight: 1},
         {id: 'deprecations', weight: 1},
         {id: 'manifest-short-name-length', weight: 1},
