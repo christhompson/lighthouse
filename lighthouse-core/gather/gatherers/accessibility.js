@@ -22,8 +22,8 @@ function runA11yChecks() {
       type: 'tag',
       values: [
         'wcag2a',
-        'wcag2aa'
-      ]
+        'wcag2aa',
+      ],
     },
     rules: {
       'tabindex': {enabled: true},
@@ -31,8 +31,8 @@ function runA11yChecks() {
       'td-has-header': {enabled: true},
       'area-alt': {enabled: false},
       'blink': {enabled: false},
-      'server-side-image-map': {enabled: false}
-    }
+      'server-side-image-map': {enabled: false},
+    },
   }).then(axeResult => {
     // Augment the node objects with outerHTML snippet & custom path string
     axeResult.violations.forEach(v => v.nodes.forEach(node => {
@@ -78,7 +78,7 @@ function runA11yChecks() {
    * @return {string}
    */
   function getOuterHTMLSnippet(node) {
-    const reOpeningTag = /^.*?\>/;
+    const reOpeningTag = /^.*?>/;
     const match = node.outerHTML.match(reOpeningTag);
     return match && match[0];
   }
@@ -96,7 +96,7 @@ class Accessibility extends Gatherer {
       return (${runA11yChecks.toString()}());
     })()`;
 
-    return driver.evaluateAsync(expression).then(returnedValue => {
+    return driver.evaluateAsync(expression, {useIsolation: true}).then(returnedValue => {
       if (!returnedValue) {
         throw new Error('No axe-core results returned');
       }

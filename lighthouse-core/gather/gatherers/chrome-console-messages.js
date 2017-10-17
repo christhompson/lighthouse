@@ -13,7 +13,6 @@
 const Gatherer = require('./gatherer');
 
 class ChromeConsoleMessages extends Gatherer {
-
   constructor() {
     super();
     this._logEntries = [];
@@ -29,7 +28,7 @@ class ChromeConsoleMessages extends Gatherer {
     driver.on('Log.entryAdded', this._onConsoleEntryAdded);
     return driver.sendCommand('Log.enable')
       .then(() => driver.sendCommand('Log.startViolationsReport', {
-        config: [{name: 'discouragedAPIUse', threshold: -1}]
+        config: [{name: 'discouragedAPIUse', threshold: -1}],
       }));
   }
 

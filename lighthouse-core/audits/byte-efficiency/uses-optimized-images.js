@@ -26,7 +26,7 @@ class UsesOptimizedImages extends ByteEfficiencyAudit {
       informative: true,
       helpText: 'Optimized images load faster and consume less cellular data. ' +
         '[Learn more](https://developers.google.com/web/tools/lighthouse/audits/optimize-images).',
-      requiredArtifacts: ['OptimizedImages', 'devtoolsLogs']
+      requiredArtifacts: ['OptimizedImages', 'devtoolsLogs'],
     };
   }
 
@@ -64,6 +64,7 @@ class UsesOptimizedImages extends ByteEfficiencyAudit {
 
       results.push({
         url,
+        fromProtocol: image.fromProtocol,
         isCrossOrigin: !image.isSameOrigin,
         preview: {url: image.url, mimeType: image.mimeType, type: 'thumbnail'},
         totalBytes: image.originalSize,
@@ -87,7 +88,7 @@ class UsesOptimizedImages extends ByteEfficiencyAudit {
     return {
       debugString,
       results,
-      headings
+      headings,
     };
   }
 }

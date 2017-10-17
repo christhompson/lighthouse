@@ -11,7 +11,6 @@ const log = require('lighthouse-logger');
 /* globals chrome */
 
 class ExtensionConnection extends Connection {
-
   constructor() {
     super();
     this._tabId = null;
@@ -109,7 +108,7 @@ class ExtensionConnection extends Connection {
           try {
             errorMessage = JSON.parse(message).message;
           } catch (e) {}
-          errorMessage = errorMessage || 'Unknown debugger protocol error.';
+          errorMessage = errorMessage || message || 'Unknown debugger protocol error.';
 
           log.formatProtocol('method <= browser ERR', {method: command}, 'error');
           return reject(new Error(`Protocol error (${command}): ${errorMessage}`));
@@ -125,7 +124,7 @@ class ExtensionConnection extends Connection {
     return new Promise((resolve, reject) => {
       const queryOpts = {
         active: true,
-        currentWindow: true
+        currentWindow: true,
       };
 
       chrome.tabs.query(queryOpts, (tabs => {

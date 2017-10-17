@@ -9,7 +9,6 @@ const ComputedArtifact = require('./computed-artifact');
 const WebInspector = require('../../lib/web-inspector');
 
 class CriticalRequestChains extends ComputedArtifact {
-
   get name() {
     return 'CriticalRequestChains';
   }
@@ -28,7 +27,7 @@ class CriticalRequestChains extends ComputedArtifact {
     // Treat any images missed by category, primarily favicons, as non-critical resources
     const nonCriticalResourceTypes = [
       WebInspector.resourceTypes.Image._category,
-      WebInspector.resourceTypes.XHR._category
+      WebInspector.resourceTypes.XHR._category,
     ];
     if (nonCriticalResourceTypes.includes(resourceTypeCategory) ||
         request.mimeType && request.mimeType.startsWith('image/')) {
@@ -57,7 +56,7 @@ class CriticalRequestChains extends ComputedArtifact {
         startTime: request.startTime,
         endTime: request.endTime,
         responseReceivedTime: request.responseReceivedTime,
-        transferSize: request.transferSize
+        transferSize: request.transferSize,
       };
     };
 
@@ -97,7 +96,7 @@ class CriticalRequestChains extends ComputedArtifact {
         if (!node[parentRequestId]) {
           node[parentRequestId] = {
             request: flattenRequest(parentRequest),
-            children: {}
+            children: {},
           };
         }
 
@@ -118,7 +117,7 @@ class CriticalRequestChains extends ComputedArtifact {
       // node should now point to the immediate parent for this request.
       node[request.requestId] = {
         request: flattenRequest(request),
-        children: {}
+        children: {},
       };
     }
 

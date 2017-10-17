@@ -39,7 +39,7 @@ function main() {
   const aggregatedScreenshots = {
     data: aggregate(outPathA, outPathB),
     a: outPathA,
-    b: outPathB
+    b: outPathB,
   };
 
   if (!utils.isDir(constants.OUT_PATH)) {
@@ -51,7 +51,7 @@ function main() {
     `var aggregatedScreenshots = ${JSON.stringify(aggregatedScreenshots, undefined, 2)}`
   );
   console.log('Wrote output to:', outFilePath); // eslint-disable-line no-console
-  console.log('Opening the screenshot viewer web page...');  // eslint-disable-line no-console
+  console.log('Opening the screenshot viewer web page...'); // eslint-disable-line no-console
   opn(path.resolve(__dirname, 'index.html'));
 }
 
@@ -140,12 +140,12 @@ function analyzeSingleRunScreenshots(runPath) {
   const screenshotsPath = path.resolve(runPath, constants.SCREENSHOTS_FILENAME);
   const screenshots = JSON.parse(fs.readFileSync(screenshotsPath)).map(screenshot => ({
     timing: Math.round(screenshot.timestamp - navStartTimestamp),
-    datauri: screenshot.datauri
+    datauri: screenshot.datauri,
   }));
 
   const results = {
     runName: runPath,
-    screenshots
+    screenshots,
   };
 
   markScreenshots(results, 'isFCP', fcpTiming);

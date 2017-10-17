@@ -21,7 +21,6 @@ const scoreForWastedMs = require('../byte-efficiency/byte-efficiency-audit').sco
 const LOAD_THRESHOLD_IN_MS = 50;
 
 class LinkBlockingFirstPaintAudit extends Audit {
-
   /**
    * @return {!AuditMeta}
    */
@@ -31,10 +30,10 @@ class LinkBlockingFirstPaintAudit extends Audit {
       name: 'link-blocking-first-paint',
       description: 'Reduce render-blocking stylesheets',
       informative: true,
-      helpText: 'Link elements are blocking the first paint of your page. Consider ' +
-          'inlining critical links and deferring non-critical ones. ' +
-          '[Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).',
-      requiredArtifacts: ['TagsBlockingFirstPaint', 'traces']
+      helpText: 'External stylesheets are blocking the first paint of your page. Consider ' +
+          'delivering critical CSS via `<style>` tags and deferring non-critical ' +
+          'styles. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).',
+      requiredArtifacts: ['TagsBlockingFirstPaint', 'traces'],
     };
   }
 
@@ -67,7 +66,7 @@ class LinkBlockingFirstPaintAudit extends Audit {
       return {
         url: item.tag.url,
         totalKb: Util.formatBytesToKB(item.transferSize),
-        totalMs: Util.formatMilliseconds(Math.round((item.endTime - startTime) * 1000), 1)
+        totalMs: Util.formatMilliseconds(Math.round((item.endTime - startTime) * 1000), 1),
       };
     });
 
@@ -96,9 +95,9 @@ class LinkBlockingFirstPaintAudit extends Audit {
         value: {
           wastedMs: delayTime,
           results,
-        }
+        },
       },
-      details: tableDetails
+      details: tableDetails,
     };
   }
 

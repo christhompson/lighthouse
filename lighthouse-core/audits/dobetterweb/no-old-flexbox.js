@@ -16,7 +16,6 @@ const URL = require('../../lib/url-shim');
 const StyleHelpers = require('../../lib/styles-helpers');
 
 class NoOldFlexboxAudit extends Audit {
-
   /**
    * @return {!AuditMeta}
    */
@@ -28,7 +27,7 @@ class NoOldFlexboxAudit extends Audit {
       failureDescription: 'Uses old CSS flexbox',
       helpText: 'The 2009 spec of Flexbox is deprecated and is 2.3x slower than the latest ' +
           'spec. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/old-flexbox).',
-      requiredArtifacts: ['Styles', 'URL']
+      requiredArtifacts: ['Styles', 'URL'],
     };
   }
 
@@ -64,7 +63,7 @@ class NoOldFlexboxAudit extends Audit {
           url,
           location: formattedStyleRule.location,
           startLine: formattedStyleRule.startLine,
-          pre: formattedStyleRule.styleRule
+          pre: formattedStyleRule.styleRule,
         });
       });
     });
@@ -76,9 +75,9 @@ class NoOldFlexboxAudit extends Audit {
           results: urlList,
           tableHeadings: {
             url: 'URL', startLine: 'Line in the stylesheet / <style>', location: 'Column start/end',
-            pre: 'Snippet'}
-        }
-      }
+            pre: 'Snippet'},
+        },
+      },
     };
   }
 }

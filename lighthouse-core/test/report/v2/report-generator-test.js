@@ -44,7 +44,7 @@ describe('ReportGeneratorV2', () => {
       assert.equal(ReportGeneratorV2.arithmeticMean([
         {score: 10, weight: 1},
         {score: 20, weight: 1},
-        {score: 3, weight: 1}
+        {score: 3, weight: 1},
       ]), 11);
     });
 
@@ -52,7 +52,7 @@ describe('ReportGeneratorV2', () => {
       assert.equal(ReportGeneratorV2.arithmeticMean([
         {score: 10, weight: 2},
         {score: 0, weight: 7},
-        {score: 20, weight: 1}
+        {score: 20, weight: 1},
       ]), 4);
     });
 
@@ -73,7 +73,7 @@ describe('ReportGeneratorV2', () => {
           'categoryA': {weight: 1, audits: [{id: 'auditA', weight: 1}]},
           'categoryB': {weight: 4, audits: [{id: 'auditB', weight: 1}]},
           'categoryC': {audits: []},
-        }
+        },
       }, {auditA: {score: 50}, auditB: {score: 100}});
 
       assert.equal(result.score, 90);
@@ -84,7 +84,7 @@ describe('ReportGeneratorV2', () => {
         categories: {
           'my-category': {name: 'My Category', audits: []},
           'my-other-category': {description: 'It is a nice category', audits: []},
-        }
+        },
       }, {});
 
       assert.equal(result.categories.length, 2);
@@ -110,9 +110,9 @@ describe('ReportGeneratorV2', () => {
               {id: 'my-scored-audit', weight: 1},
               {id: 'my-failed-audit', weight: 1},
               {id: 'my-boolean-failed-audit', weight: 1},
-            ]
+            ],
           },
-        }
+        },
       }, auditResults);
 
       assert.equal(result.categories.length, 2);
@@ -129,10 +129,10 @@ describe('ReportGeneratorV2', () => {
     });
 
     it('should inject the report JSON', () => {
-      const code = 'hax</script><script>console.log("pwned");%%LIGHTHOUSE_JAVASCRIPT%%';
+      const code = 'hax\u2028hax</script><script>console.log("pwned");%%LIGHTHOUSE_JAVASCRIPT%%';
       const result = new ReportGeneratorV2().generateReportHtml({code});
-      assert.ok(result.includes('"code":"hax'), 'injects the json');
-      assert.ok(result.includes('\\u003c/script'), 'escapes HTML tags');
+      assert.ok(result.includes('"code":"hax\\u2028'), 'injects the json');
+      assert.ok(result.includes('hax\\u003c/script'), 'escapes HTML tags');
       assert.ok(result.includes('LIGHTHOUSE_JAVASCRIPT'), 'cannot be tricked');
     });
 
@@ -152,6 +152,7 @@ describe('ReportGeneratorV2', () => {
     it('should inject the report renderer javascript', () => {
       const result = new ReportGeneratorV2().generateReportHtml({});
       assert.ok(result.includes('ReportRenderer'), 'injects the script');
+      assert.ok(result.includes('robustness: \\u003c/script'), 'escapes HTML tags in javascript');
       assert.ok(result.includes('pre$`post'), 'does not break from String.replace');
       assert.ok(result.includes('LIGHTHOUSE_JSON'), 'cannot be tricked');
     });

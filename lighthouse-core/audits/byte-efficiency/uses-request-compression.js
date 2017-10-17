@@ -28,7 +28,7 @@ class ResponsesAreCompressed extends ByteEfficiencyAudit {
       helpText: 'Text-based responses should be served with compression (gzip, deflate or brotli)' +
         ' to minimize total network bytes.' +
         ' [Learn more](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer).',
-      requiredArtifacts: ['ResponseCompression', 'devtoolsLogs']
+      requiredArtifacts: ['ResponseCompression', 'devtoolsLogs'],
     };
   }
 
@@ -48,8 +48,7 @@ class ResponsesAreCompressed extends ByteEfficiencyAudit {
 
       // we require at least 10% savings off the original size AND at least 1400 bytes
       // if the savings is smaller than either, we don't care
-      if (
-          1 - gzipSize / originalSize < IGNORE_THRESHOLD_IN_PERCENT ||
+      if (1 - gzipSize / originalSize < IGNORE_THRESHOLD_IN_PERCENT ||
           gzipSavings < IGNORE_THRESHOLD_IN_BYTES
       ) {
         return;

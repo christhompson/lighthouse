@@ -2,13 +2,11 @@
 
 > Lighthouse analyzes web apps and web pages, collecting modern performance metrics and insights on developer best practices.
 
-_Lighthouse requires Chrome [stable or later](https://googlechrome.github.io/current-versions/)._
-
 ## Using Lighthouse in Chrome DevTools
 
 Lighthouse is integrated directly into the Chrome Developer Tools, under the "Audits" panel.
 
-**Installation**: install [Chrome Canary](https://www.google.com/chrome/browser/canary.html).
+**Installation**: install [Chrome](https://www.google.com/chrome/browser).
 
 **Run it**: open Chrome DevTools, select the Audits panel, and hit "Perform an Audit...".
 
@@ -80,11 +78,11 @@ Output:
 Options:
   --help                        Show help                                                                                                  [boolean]
   --version                     Show version number                                                                                        [boolean]
+  --blocked-url-patterns        Block any network requests to the specified URL patterns                                                     [array]
   --disable-storage-reset       Disable clearing the browser cache and other storage APIs before a run                                     [boolean]
   --disable-device-emulation    Disable Nexus 5X emulation                                                                                 [boolean]
   --disable-cpu-throttling      Disable CPU throttling                                                                    [boolean] [default: false]
   --disable-network-throttling  Disable network throttling                                                                                 [boolean]
-  --interactive                 Open Lighthouse in interactive mode                                                                        [boolean]
 
 Examples:
   lighthouse <url> --view                                                   Opens the HTML report in a browser after the run completes
@@ -208,11 +206,9 @@ yarn
 yarn install-all
 yarn build-all
 
-# The CLI and Chrome Launcher are authored in TypeScript and require compilation.
+# The CLI is authored in TypeScript and requires compilation.
 # If you need to make changes to the CLI, run the TS compiler in watch mode:
 # cd lighthouse-cli && yarn dev
-# similarly, run the TS compiler for the launcher:
-# cd chrome-launcher && yarn dev
 ```
 
 ### Run
@@ -248,8 +244,13 @@ yarn compile-devtools
 ```
 
 ## Lighthouse Integrations
+This section details projects that have integrated Lighthouse. If you're working on a cool project integrating Lighthouse and would like to be featured here, file an issue to this repo or tweet at us [@_____lighthouse](https://twitter.com/____lighthouse?lang=en)
 
-* **[Calibre](https://calibreapp.com)** - Calibre is a web performance monitoring tool running Lighthouse continuously or on-demand via an API. Test using emulated devices and connection speeds from a number of geographical locations. Set budgets and improve performance with actionable guidelines.
+* **[Calibre](https://calibreapp.com)** - Calibre is a web performance monitoring tool running Lighthouse continuously or on-demand via an API. Test using emulated devices and connection speeds from a number of geographical locations. Set budgets and improve performance with actionable guidelines. Note that Calibre is a paid product with a free 14-day trial.
+
+* **[HTTPArchive](http://httparchive.org/)** - HTTPArchive tracks how the web is built by crawling 500k pages with Web Page Test, including Lighthouse results, and stores the information in BigQuery where it is [publicly available](https://discuss.httparchive.org/t/quickstart-guide-to-exploring-the-http-archive/682).
+
+* **[Treo](https://treo.sh)** - Treo is Lighthouse as a Service. It provides regression testing, geographical regions, custom networks, and integrations with Github & Slack. Treo is a paid product with plans for solo-developers and teams.
 
 * **[Web Page Test](https://www.webpagetest.org)** — An [open source](https://github.com/WPO-Foundation/webpagetest) tool for measuring and analyzing the performance of web pages on real devices. Users can choose to produce a Lighthouse report alongside the analysis of WebPageTest results.
 
@@ -274,15 +275,14 @@ See [Lighthouse Architecture](./docs/architecture.md).
 
 Yes! Details in [Lighthouse configuration](./docs/configuration.md).
 
-### What is "Do Better Web"?
+### How does Lighthouse use network throttling, and how can I make it better?
 
-**Do Better Web** is an initiative within Lighthouse to help web developers modernize their existing
-web applications. By running a set of tests, developers can discover new web platform APIs, become
-aware of performance pitfalls, and learn (newer) best practices. In other words, do better on the web!
+Good question. Network and CPU throttling are applied by default in a Lighthouse run. The network
+attempts to emulate 3G and the CPU is slowed down 4x from your machine's default speed. If you
+prefer to run Lighthouse without throttling, you'll have to use the CLI and disable it with the
+`--disable-*` flags mentioned above.
 
-DBW is implemented as a set of standalone [gatherers](https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/gather/gatherers/dobetterweb) and [audits](https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/audits/dobetterweb) that are run alongside the core Lighthouse tests. The tests show up under "Best Practices" in the report.
-
-If you'd like to contribute, check the [list of issues](https://github.com/GoogleChrome/lighthouse/issues?q=is%3Aissue+is%3Aopen+label%3ADoBetterWeb) or propose a new audit by filing an issue.
+Read more in our [guide to network throttling](./docs/throttling.md).
 
 ### Are results sent to a remote server?
 

@@ -4,7 +4,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
- /**
+/**
   * @fileoverview Determines optimized jpeg/webp filesizes for all same-origin and dataURI images by
   *   running the images through canvas in the browser context.
   */
@@ -13,6 +13,11 @@
 const Gatherer = require('../gatherer');
 const URL = require('../../../lib/url-shim');
 const Sentry = require('../../../lib/sentry');
+
+const JPEG_QUALITY = 0.92;
+const WEBP_QUALITY = 0.85;
+
+const MINIMUM_IMAGE_SIZE = 4096; // savings of <4 KB will be ignored in the audit anyway
 
 /* global document, Image, atob */
 
@@ -72,7 +77,7 @@ class OptimizedImages extends Gatherer {
       const isSameOrigin = URL.originsMatch(pageUrl, record._url);
       const isBase64DataUri = /^data:.{2,40}base64\s*,/.test(record._url);
 
-      if (isOptimizableImage) {
+      if (isOptimizableImage && record._resourceSize > MINIMUM_IMAGE_SIZE) {
         prev.push({
           isSameOrigin,
           isBase64DataUri,
@@ -89,27 +94,57 @@ class OptimizedImages extends Gatherer {
 
   /**
    * @param {!Object} driver
+   * @param {string} requestId
+   * @param {string} encoding Either webp or jpeg.
+   * @return {!Promise<{encodedSize: number}>}
+   */
+  _getEncodedResponse(driver, requestId, encoding) {
+    const quality = encoding === 'jpeg' ? JPEG_QUALITY : WEBP_QUALITY;
+    const params = {requestId, encoding, quality, sizeOnly: true};
+    return driver.sendCommand('Audits.getEncodedResponse', params);
+  }
+
+  /**
+   * @param {!Object} driver
    * @param {{url: string, isBase64DataUri: boolean, resourceSize: number}} networkRecord
-   * @return {!Promise<?{originalSize: number, jpegSize: number, webpSize: number}>}
+   * @return {!Promise<?{fromProtocol: boolean, originalSize: number, jpegSize: number, webpSize: number}>}
    */
   calculateImageStats(driver, networkRecord) {
-    if (!networkRecord.isSameOrigin && !networkRecord.isBase64DataUri) {
-      // Processing of cross-origin images is buggy and very slow, disable for now
-      // See https://github.com/GoogleChrome/lighthouse/issues/1853
-      // See https://github.com/GoogleChrome/lighthouse/issues/2146
-      return Promise.resolve(null);
-    }
-
-    return Promise.resolve(networkRecord.url).then(uri => {
-      const script = `(${getOptimizedNumBytes.toString()})(${JSON.stringify(uri)})`;
-      return driver.evaluateAsync(script).then(stats => {
-        if (!stats) {
-          return null;
+    // TODO(phulce): remove this dance of trying _getEncodedResponse with a fallback when Audits
+    // domain hits stable in Chrome 62
+    return Promise.resolve(networkRecord.requestId).then(requestId => {
+      if (this._getEncodedResponseUnsupported) return;
+      return this._getEncodedResponse(driver, requestId, 'jpeg').then(jpegData => {
+        return this._getEncodedResponse(driver, requestId, 'webp').then(webpData => {
+          return {
+            fromProtocol: true,
+            originalSize: networkRecord.resourceSize,
+            jpegSize: jpegData.encodedSize,
+            webpSize: webpData.encodedSize,
+          };
+        });
+      }).catch(err => {
+        if (/wasn't found/.test(err.message)) {
+          // Mark non-support so we don't keep attempting the protocol method over and over
+          this._getEncodedResponseUnsupported = true;
+        } else {
+          throw err;
         }
+      });
+    }).then(result => {
+      if (result) return result;
 
+      // Take the slower fallback path if getEncodedResponse isn't available yet
+      // CORS canvas tainting doesn't support cross-origin images, so skip them early
+      if (!networkRecord.isSameOrigin && !networkRecord.isBase64DataUri) return null;
+
+      const script = `(${getOptimizedNumBytes.toString()})(${JSON.stringify(networkRecord.url)})`;
+      return driver.evaluateAsync(script).then(stats => {
+        if (!stats) return null;
         const isBase64DataUri = networkRecord.isBase64DataUri;
         const base64Length = networkRecord.url.length - networkRecord.url.indexOf(',') - 1;
         return {
+          fromProtocol: false,
           originalSize: isBase64DataUri ? base64Length : networkRecord.resourceSize,
           jpegSize: isBase64DataUri ? stats.jpeg.base64 : stats.jpeg.binary,
           webpSize: isBase64DataUri ? stats.webp.base64 : stats.webp.binary,

@@ -80,8 +80,8 @@ describe('DetailsRenderer', () => {
         items: [
           {title: 'Total DOM Nodes', value: 3500, target: '1,500 nodes'},
           {title: 'DOM Depth', value: 10, snippet: 'snippet'},
-          {title: 'Maximum Children', value: 20, snippet: 'snippet2', target: 20}
-        ]
+          {title: 'Maximum Children', value: 20, snippet: 'snippet2', target: 20},
+        ],
       };
 
       const details = renderer._renderCards(list);
@@ -108,7 +108,7 @@ describe('DetailsRenderer', () => {
         text: 'code snippet',
         lineNumber: 123,
         source: 'deprecation',
-        url: 'https://example.com/feature'
+        url: 'https://example.com/feature',
       });
 
       assert.ok(el.localName === 'pre');
@@ -182,6 +182,49 @@ describe('DetailsRenderer', () => {
       assert.equal(el.querySelectorAll('.lh-table-column--text').length, 6, '--text not set');
       assert.equal(el.querySelectorAll('.lh-table-column--thumbnail').length, 3,
           '--thumbnail not set');
+    });
+
+    it('renders links', () => {
+      const linkText = 'Example Site';
+      const linkUrl = 'https://example.com/';
+      const el = renderer.render({
+        type: 'link',
+        text: linkText,
+        url: linkUrl,
+      });
+
+      assert.equal(el.localName, 'a');
+      assert.equal(el.textContent, linkText);
+      assert.equal(el.href, linkUrl);
+      assert.equal(el.rel, 'noopener');
+      assert.equal(el.target, '_blank');
+    });
+
+    it('renders link as text if URL is not allowed', () => {
+      const linkText = 'Evil Link';
+      const linkUrl = 'javascript:alert(5)';
+      const el = renderer.render({
+        type: 'link',
+        text: linkText,
+        url: linkUrl,
+      });
+
+      assert.equal(el.localName, 'div');
+      assert.equal(el.textContent, linkText);
+      assert.ok(el.classList.contains('lh-text'), 'adds classes');
+    });
+
+    it('renders text URLs', () => {
+      const urlText = 'https://example.com/';
+      const displayUrlText = '/';
+      const el = renderer.render({
+        type: 'url',
+        text: urlText,
+      });
+
+      assert.equal(el.localName, 'div');
+      assert.equal(el.textContent, displayUrlText);
+      assert.ok(el.classList.contains('lh-text'), 'adds classes');
     });
   });
 });

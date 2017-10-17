@@ -8,7 +8,6 @@
 const Gatherer = require('./gatherer');
 
 class URL extends Gatherer {
-
   afterPass(options) {
     // Used currently by cache-start-url audit, which wants to know if the start_url
     // in the manifest is stored in the cache.
@@ -16,7 +15,7 @@ class URL extends Gatherer {
     // post-redirect URL (which is here at options.url)
     return {
       initialUrl: options.initialUrl,
-      finalUrl: options.url
+      finalUrl: options.url,
     };
   }
 }

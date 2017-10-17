@@ -8,9 +8,11 @@
 module.exports = {
   passes: [{
     recordTrace: true,
-    pauseBeforeTraceEndMs: 5000,
+    pauseAfterLoadMs: 5250,
+    networkQuietThresholdMs: 5250,
+    cpuQuietThresholdMs: 5250,
     useThrottling: true,
-    gatherers: []
+    gatherers: [],
   }],
 
   audits: [
@@ -18,6 +20,6 @@ module.exports = {
     'speed-index-metric',
     'estimated-input-latency',
     'first-interactive',
-    'consistently-interactive'
-  ]
+    'consistently-interactive',
+  ],
 };

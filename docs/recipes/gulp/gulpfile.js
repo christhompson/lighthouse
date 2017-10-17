@@ -9,7 +9,7 @@
 const gulp = require('gulp');
 const connect = require('gulp-connect');
 const lighthouse = require('lighthouse');
-const chromeLauncher = require('lighthouse/chrome-launcher');
+const chromeLauncher = require('chrome-launcher');
 const perfConfig = require('lighthouse/lighthouse-core/config/perf.json');
 const PORT = 8080;
 
@@ -19,7 +19,7 @@ const PORT = 8080;
 const startServer = function() {
   return connect.server({
     root: './public',
-    port: PORT
+    port: PORT,
   });
 };
 

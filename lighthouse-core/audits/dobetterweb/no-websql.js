@@ -14,7 +14,6 @@
 const Audit = require('../audit');
 
 class NoWebSQLAudit extends Audit {
-
   /**
    * @return {!AuditMeta}
    */
@@ -26,7 +25,7 @@ class NoWebSQLAudit extends Audit {
       failureDescription: 'Uses WebSQL DB',
       helpText: 'Web SQL is deprecated. Consider using IndexedDB instead. ' +
           '[Learn more](https://developers.google.com/web/tools/lighthouse/audits/web-sql).',
-      requiredArtifacts: ['WebSQL']
+      requiredArtifacts: ['WebSQL'],
     };
   }
 
@@ -41,7 +40,7 @@ class NoWebSQLAudit extends Audit {
 
     return {
       rawValue: !db,
-      debugString
+      debugString,
     };
   }
 }

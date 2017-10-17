@@ -12,12 +12,13 @@ module.exports = {
   extends: 'lighthouse:default',
   settings: {
     onlyCategories: [
-      'best-practices'
+      'best-practices',
     ],
     onlyAudits: [
       'dom-size',
       'link-blocking-first-paint',
       'script-blocking-first-paint',
-    ]
-  }
+      'errors-in-console',
+    ],
+  },
 };

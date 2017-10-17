@@ -16,7 +16,6 @@ const Audit = require('../audit');
 const Util = require('../../report/v2/renderer/util.js');
 
 class UsesHTTP2Audit extends Audit {
-
   /**
    * @return {!AuditMeta}
    */
@@ -28,7 +27,7 @@ class UsesHTTP2Audit extends Audit {
       failureDescription: 'Does not use HTTP/2 for all of its resources',
       helpText: 'HTTP/2 offers many benefits over HTTP/1.1, including binary headers, ' +
           'multiplexing, and server push. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/http2).',
-      requiredArtifacts: ['URL', 'devtoolsLogs']
+      requiredArtifacts: ['URL', 'devtoolsLogs'],
     };
   }
 
@@ -44,14 +43,14 @@ class UsesHTTP2Audit extends Audit {
       // Filter requests that are on the same host as the page and not over h2.
       const resources = networkRecords.filter(record => {
         // test the protocol first to avoid (potentially) expensive URL parsing
-        const isOldHttp = /HTTP\/[01][\.\d]?/i.test(record.protocol);
+        const isOldHttp = /HTTP\/[01][.\d]?/i.test(record.protocol);
         if (!isOldHttp) return false;
         const requestHost = new URL(record._url).host;
         return requestHost === finalHost;
       }).map(record => {
         return {
           protocol: record.protocol,
-          url: record.url // .url is a getter and not copied over for the assign.
+          url: record.url, // .url is a getter and not copied over for the assign.
         };
       });
 
@@ -75,7 +74,7 @@ class UsesHTTP2Audit extends Audit {
         extendedInfo: {
           value: {
             results: resources,
-          }
+          },
         },
         details,
       };

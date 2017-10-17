@@ -13,57 +13,69 @@ module.exports = [
     initialUrl: 'http://localhost:10200/byte-efficiency/tester.html',
     url: 'http://localhost:10200/byte-efficiency/tester.html',
     audits: {
-      // TODO: re-enable once CSS protocol has stabilized
-      // 'unused-css-rules': {
-      //   score: false,
-      //   extendedInfo: {
-      //     value: {
-      //       results: {
-      //         length: 2
-      //       }
-      //     }
-      //   }
-      // },
+      'unused-css-rules': {
+        score: '<100',
+        extendedInfo: {
+          value: {
+            wastedKb: 39,
+            results: {
+              length: 2,
+            },
+          },
+        },
+      },
+      'unused-javascript': {
+        score: '<100',
+        extendedInfo: {
+          value: {
+            // TODO(phulce): Update this to =32 once block-level coverage tracking hits stable
+            wastedKb: '>=18',
+            results: {
+              length: 2,
+            },
+          },
+        },
+      },
       'offscreen-images': {
         score: '<100',
         extendedInfo: {
           value: {
             results: {
-              length: 3
-            }
-          }
-        }
+              length: 3,
+            },
+          },
+        },
       },
       'uses-webp-images': {
         score: '<100',
         extendedInfo: {
           value: {
             results: {
-              length: 4
-            }
-          }
-        }
+              length: 4,
+            },
+          },
+        },
       },
       'uses-optimized-images': {
         score: '<100',
         extendedInfo: {
           value: {
             results: {
-              length: 1
-            }
-          }
-        }
+              length: 1,
+            },
+          },
+        },
       },
       'uses-responsive-images': {
         score: '<100',
         extendedInfo: {
           value: {
             results: {
-              length: 3
-            }
-          }
-        }
-      }
-    }
+              length: 3,
+            },
+          },
+        },
+      },
+    },
   },
 ];

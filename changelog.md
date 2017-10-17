@@ -1,3 +1,87 @@
+<a name="2.5.1"></a>
+# 2.5.1 (2017-10-06)
+[Full Changelog](https://github.com/GoogleChrome/lighthouse/compare/v2.5.0...v2.5.1)
+
+* Fix compat with DevTools via Runtime mock object
+
+<a name="2.5.0"></a>
+# 2.5.0 (2017-10-04)
+[Full Changelog](https://github.com/GoogleChrome/lighthouse/compare/v2.4.0...v2.5.0)
+
+## New Contributors!
+* Huge contributions from new contributors with all-new audits, Chrome launching improvements, and more complete documentation. Thanks to @mikecardwell, @rviscomi, @siddharthkp, @ThisIzKp, @rootulp, @kdzwinel, @LCartwright, @siteriaitaliana, @vinamratasingal, @alanyin0322, and @tkadlec!
+
+## New audits
+* `image-aspect-ratio` best practice audit (#3084)
+* `time-to-first-byte` perf audit (last fixes and now enabled) (#2231)
+* `errors-in-console` best practice audit (#2836)
+* `no-vulnerable-libraries` best practice audit (#2372)
+
+### New audits in [full-config](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/full-config.js)
+* `unused-javascript` coverage audit (#3085)
+
+### New audits in new [SEO config](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/seo.js) (#2999)
+* `meta-description` SEO audit (#3227)
+* `http-status-code` SEO audit (#3311)
+
+## [FastMode](https://github.com/GoogleChrome/lighthouse/issues/2703)
+* add `predictive-perf` shell and base audit (#2720, #3189)
+* add network estimation (#3187, cf5638d6)
+* add CPU estimation (#3162, 18837dad, 5b459a1e)
+
+## Core
+* update `unused-css-rules` audit to support new coverage format (full-config only) (#2518)
+* perf: use `Audits.getEncodedResponse` in `optimized-images` audit (#3087)
+* don't wait for `Page.navigate` to resolve to listen for page load (#3413)
+* include `v8.execute` trace event category (ab6aabde)
+
+## Report
+* clarify wording of category descriptions (#3000)
+* add a linked-text type to details renderer (#3165)
+* fix: tame greedy markdown-link regex (#3312)
+* fix: prevent `\u2028` and `\u2029` from breaking the report (#3442)
+* improve descriptions for a11y audits (#3474)
+
+## Testing
+* smokehouse: adjust `unused-css-rules` audit expectations (#3036)
+* bundlesize: fix reporting in github UI (ede05c0a, #3392)
+* smokehouse: add basic smoke test for SEO audits (#3267)
+* travis: unset `\_JAVA_OPTIONS` for DevTools' `compile_frontend.py` test (#3354)
+* eslint: enable `comma-dangle` rule, fix all new errors (#3324)
+* smokehouse: add `time-to-first-byte` smoke test (#3310)
+
+## Docs
+* import [audit glossary](https://github.com/GoogleChrome/lighthouse/blob/190b8abb9c39d469c09aa167e6a72fa9e01740d1/docs/architecture.md#components--terminology) from SEO doc (#3207)
+* add [advanced throttling guide](https://github.com/GoogleChrome/lighthouse/blob/190b8abb9c39d469c09aa167e6a72fa9e01740d1/docs/throttling.md) (#3205)
+* readme: reduce minimum Chrome version to current stable (#3287, 5382f37c)
+* readme: add explanation for [Lighthouse Integrations](https://github.com/GoogleChrome/lighthouse/blob/190b8abb9c39d469c09aa167e6a72fa9e01740d1/readme.md#lighthouse-integrations) section (#3418)
+contributing.md: fix grammatical errors (#3419)
+
+## CLI
+* add [`blockedUrlPatterns` support to CLI](https://github.com/GoogleChrome/lighthouse/blob/190b8abb9c39d469c09aa167e6a72fa9e01740d1/readme.md#cli-options) (#3125)
+* adopt `yargsParser` directly for `chromeFlags` parsing (#3408)
+
+## Chrome-launcher
+_chrome-launcher has moved to a [standalone npm package](https://npmjs.org/package/chrome-launcher)_
+* docs: add changelog (#2987)
+* improve `SIGINT` handling (#2959)
+* mute audio (#3028)
+* rev to 0.6.0 (ec38bcd9, 970d3cad, e9d569c5, 5e9a3aba)
+* handle errors inside `spawnPromise` (#2939)
+* switch to using standalone package (#3410)
+
+## Misc
+* apply small license header to remaining files (#3309)
+* fix: remove redundant `lighthouse-logger/` from npm package (#3411)
+* remove old `perfX` code (#3431)
+* update plots-config to use newer quiet parameters (#3464)
+* collect even malformed error messages in extension (#3473)
+
+## Deps
+* upgrade `bundlesize` to 0.13.2 (#3122)
+* upgrade `axe-core` to 2.4.1 (#3284, #3320)
+* upgrade `ws` to 1.1.2 (2d2206b8)
+* add yargs-parser at 7.0.0 (#3477, #3478)
 
 <a name="2.4.0"></a>
 # 2.4.0 (2017-08-14)
@@ -254,7 +338,7 @@ Overall the **Operation Yaquina Bay** (Issue #2146) effort made massive improvem
 
 ## New Contributors!
 
-Huge thanks to who contributed 27 epic PRs. 
+Huge thanks to who contributed 27 epic PRs.
 
 * @abacon - remove images from critical request chains
 * @benschwarz - Calibre and WPT to readme
@@ -269,7 +353,7 @@ Huge thanks to who contributed 27 epic PRs.
 * @maya - Fix "Installation" spelling mistake
 * @stramel - non-critical images, template literal linting, containerized trusty
 * @mikerhyssmith - Updated readme to add port number when testing a site with authentication
-* @sendilkumarn - handlebars precompiled (we'll pour one out), clearer iconography, helpText fixes. 
+* @sendilkumarn - handlebars precompiled (we'll pour one out), clearer iconography, helpText fixes.
 * @ZZhaoTireless - report `<details>` printing fix
 * @cedricbellet - handleJavascriptDialogs
 * @thearegee - Readme: Adding lighthouse-cron to Related Projects
@@ -376,9 +460,9 @@ Huge thanks to who contributed 27 epic PRs.
 # 1.6.5 (2017-03-04)
 [Full Changelog](https://github.com/GoogleChrome/lighthouse/compare/v1.6.0...1.6.5)
 
-This is a **maintenance release** on the stable [1.6 branch](https://github.com/GoogleChrome/lighthouse/tree/1.6). 
+This is a **maintenance release** on the stable [1.6 branch](https://github.com/GoogleChrome/lighthouse/tree/1.6).
 
-Master branch (tagged at 2.0.0-alpha) is under some heavy refactors, so we're holding off on shipping a new version. Expect one by mid-May. 
+Master branch (tagged at 2.0.0-alpha) is under some heavy refactors, so we're holding off on shipping a new version. Expect one by mid-May.
 _( Poke around recent PRs and issues if you're curious what we're up to ;)_
 
 In the meantime, only a few changes here in 1.6.5:
@@ -420,21 +504,21 @@ Huge thanks to @sendilkumarn, who contributed [four epic PRs](https://github.com
 ### Notable Changes
 
 - **WebPageTest integration is in beta**
-  
-  By popular demand, you will soon have a way to run Lighthouse on demand in the cloud. We've worked closely with WebPageTest to enable Lighthouse auditing and analysis from within a WPT run. 
+
+  By popular demand, you will soon have a way to run Lighthouse on demand in the cloud. We've worked closely with WebPageTest to enable Lighthouse auditing and analysis from within a WPT run.
   Our contribution [WPO-Foundation/webpagetest#825](https://github.com/WPO-Foundation/webpagetest/pull/825) was just merged and Lighthouse on WPT is currently in private beta.
 
 <p align="center"><img alt="lighthouse-webpagetest-beta" src="https://cloud.githubusercontent.com/assets/39191/23574976/96be73fa-003a-11e7-9f08-45e104ef2560.gif"></p>
 
 - **Lighthouse's CLI output has taken a chill pill** - #1764
 
-  While you can view all Lighthouse results on the command line, it hasn't scaled well. A few screenworths of report was generally dumped to stdout right as Lighthouse finished up. Now, to keep your terminal happy, you will no longer see the reams of results printed to stdout. 
-  The HTML report is saved to disk by default, and you can automatically open it with `lighthouse --view`. 
+  While you can view all Lighthouse results on the command line, it hasn't scaled well. A few screenworths of report was generally dumped to stdout right as Lighthouse finished up. Now, to keep your terminal happy, you will no longer see the reams of results printed to stdout.
+  The HTML report is saved to disk by default, and you can automatically open it with `lighthouse --view`.
 
 <p align="center"><img alt="lighthouse --view flag" src="https://cloud.githubusercontent.com/assets/39191/23574913/8f733424-0039-11e7-8ecd-3fe4758e735a.gif"></p>
 
   If you still want the stdout output, use `--output=pretty`. Oh so pretty.
-  
+
 - **CI coverage for Windows via AppVeyor** - #1280
 
 <p align="center"><img src="https://cloud.githubusercontent.com/assets/39191/23574765/2f787e50-0037-11e7-9bba-ccf57423a815.png" width="450"></p>
@@ -534,66 +618,66 @@ There were 128 PRs landed for this release. These are their stories.
 
 ### Notable Changes
 - **Dropped support for Node earlier than v6** - #1519
-  
+
   Node v6 became the [Node long-term-support version](https://github.com/nodejs/LTS#lts-schedule) in October 2016. After a suitable mourning period for v4 with a `--harmony` flag, Lighthouse has moved on and will only support v6+ going forward.
 - **Improved selection of First Contentful and Meaningful Paint events from unusual traces** - #1632, #1634
-  
+
   Lighthouse has banished the dreaded `-1` score that has long plagued runs for [certain sites](https://airhorner.com/).
-  
+
   ![image](https://cloud.githubusercontent.com/assets/316891/22815981/ea000d68-ef13-11e6-95f5-258e2cacdd54.png)
-  
+
   First Meaningful Paint is now detected much more robustly. While it is [not yet a completely solved problem](https://github.com/GoogleChrome/lighthouse/issues/1464), a large class of these errors should be eliminated. Reporting on these errors has also improved over the ambiguous `-1`, clearly differentiating between an issue with Lighthouse and an issue with the page being tested.
 - **Open local report in online report Viewer** - #1179
-  
+
   When viewing a Lighthouse HTML report generated locally—in the extension or from the command line—a new option is available in the "Export..." dropdown that allows you to upload to the [Lighthouse Online Viewer](https://googlechrome.github.io/lighthouse/viewer/).
-  
+
   ![localreport](https://cloud.githubusercontent.com/assets/316891/22817784/3d865302-ef1e-11e6-9535-50937f5929ef.png)
-  
+
   ![viewer](https://cloud.githubusercontent.com/assets/316891/22817839/9b477ab6-ef1e-11e6-8fc7-bafbedfd2872.png)
-  
+
   You can then use the Viewer share button to get a report URL that you can share freely.
-  
+
   Behind the scenes, Viewer gets your permission via OAuth to create a GitHub [secret gist](https://help.github.com/articles/about-gists/#secret-gists) and saves the report there. Since it's done as _your_ gist, you maintain full control over the sharing of the report and you can delete it at any time. You can revoke the Viewer's permission to create gists under your [GitHub settings](https://github.com/settings/applications).
 - **Performance metrics are injected into trace saved with `--save-assets` for viewing in timeline** - #1446
-  
+
   Lighthouse metrics like "First meaningful paint", "Time to Interactive", etc are mocked out as User Timing measures and injected back into the trace taken by Lighthouse.
-  
+
   ![image](https://cloud.githubusercontent.com/assets/39191/21796487/f35ad136-d6bd-11e6-9447-2260adcf1d65.png)
-  
+
   If you save a run's trace with `--save-assets` and then open it in DevTools or [Timeline Viewer](https://chromedevtools.github.io/timeline-viewer/), you'll be able to see your key metrics in context with the full trace of the page load.
 - **Throttling and emulation information in report** - #1485, #1608, fc858ea
-  
+
   <img width="719" alt="screen shot 2017-02-09 at 22 43 27" src="https://cloud.githubusercontent.com/assets/316891/22816879/3c913ac0-ef19-11e6-812b-7e728543318b.png">
-  
+
   It's easy to forget what throttling and emulation settings were used for a particular Lighthouse run after some time has passed. The settings used are now saved in the raw JSON results and are printed at the top of the HTML report under the arrow dropdown.
 - **UI to interactively block certain page resources and measure the load performance difference**
-  
+
   The first version of the [Performance Experiment](https://docs.google.com/document/d/1FYt5Es_Kf5IyC_bkTHj2G_a_sTvRvIq5iZCEN8VZY5o/edit#heading=h.cetla8h0y4o) project is landing in 1.5.0. When Lighthouse is run with the `--interactive` flag, a special report is generated that allows interactive selection of costly page resources. The experiment server then reruns Lighthouse on that page with those resources blocked.
-  
+
   <img width="720" alt="screen shot 2017-02-09 at 23 45 34" src="https://cloud.githubusercontent.com/assets/316891/22818415/f19058e0-ef21-11e6-82f6-aa6b49013e11.png">
-  
+
   This lets you experiment with your page load performance, interactively testing the effects of blocking or delaying assets in your critical path.
 
 ### New Audits
 - **CSS usage** - #1421, #1479, #1466, #1496, #1557
-  
+
   Reports the number of unused style rules in your page and the byte/time savings of removing them:
-  
+
   <img width="831" alt="screen shot 2017-02-09 at 23 43 17" src="https://cloud.githubusercontent.com/assets/316891/22818581/d4fd379c-ef22-11e6-9143-36cc7c7245ae.png">
 - **Image optimization** - #1452, #1579
-  
+
   Reports images that are unoptimized and the byte/time savings of optimizing them:
-  
+
   <img width="630" alt="screen shot 2017-02-09 at 23 43 49" src="https://cloud.githubusercontent.com/assets/316891/22818588/dd3994aa-ef22-11e6-8fee-7469a8866aa6.png">
 - **Report Chrome's deprecated API warnings** - #1470
-  
+
   Lists console warnings from Chrome if your page is using deprecated APIs or features that have [interventions](https://www.chromestatus.com/features#intervention):
-  
+
   <img width="675" alt="screen shot 2017-02-10 at 00 05 25" src="https://cloud.githubusercontent.com/assets/316891/22818969/b317e9d6-ef24-11e6-89db-9ee596ba8539.png">
 - **Responsive image sizing** - #1497
-  
+
   Reports images that are too big and the potential byte/time savings of sizing them correctly for the given device:
-  
+
   <img width="758" alt="screen shot 2017-02-09 at 23 44 23" src="https://cloud.githubusercontent.com/assets/316891/22818602/ef802c82-ef22-11e6-9e77-138bd743aca8.png">
 
 ### Improvements
@@ -803,7 +887,7 @@ There were 128 PRs landed for this release. These are their stories.
 - **Report:** Fix print styling - #1180
 - **Testing:** Handle critical-request-chains audit promise rejections - #1100
 - **Testing:** Fix failing lint test - aa6d38b3
-- **Viewer:** Disable sharing button if gist is already saved - #1118 
+- **Viewer:** Disable sharing button if gist is already saved - #1118
 
 ### Testing
 - Don't run Closure type checking on Travis - 558a26

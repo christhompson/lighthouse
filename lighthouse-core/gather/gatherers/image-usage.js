@@ -4,7 +4,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
- /**
+/**
   * @fileoverview Gathers all images used on the page with their src, size,
   *   and attribute information. Executes script in the context of the page.
   */
@@ -32,10 +32,13 @@ function collectImageElementInfo() {
   const allImageElements = allElements.filter(element => element.localName === 'img');
 
   const htmlImages = allImageElements.map(element => {
+    const computedStyle = window.getComputedStyle(element);
     return {
       // currentSrc used over src to get the url as determined by the browser
       // after taking into account srcset/media/sizes/etc.
       src: element.currentSrc,
+      width: element.width,
+      height: element.height,
       clientWidth: element.clientWidth,
       clientHeight: element.clientHeight,
       clientRect: getClientRect(element),
@@ -43,6 +46,8 @@ function collectImageElementInfo() {
       naturalHeight: element.naturalHeight,
       isCss: false,
       isPicture: element.parentElement.tagName === 'PICTURE',
+      usesObjectFit: computedStyle.getPropertyValue('object-fit') === 'cover'
+      || computedStyle.getPropertyValue('object-fit') === 'contain',
     };
   });
 
@@ -78,6 +83,7 @@ function collectImageElementInfo() {
       naturalHeight: Number.MAX_VALUE,
       isCss: true,
       isPicture: false,
+      usesObjectFit: false,
     });
 
     return images;
@@ -94,7 +100,7 @@ function determineNaturalSize(url) {
     img.addEventListener('load', () => {
       resolve({
         naturalWidth: img.naturalWidth,
-        naturalHeight: img.naturalHeight
+        naturalHeight: img.naturalHeight,
       });
     });
 
@@ -103,7 +109,6 @@ function determineNaturalSize(url) {
 }
 
 class ImageUsage extends Gatherer {
-
   /**
    * @param {{src: string}} element
    * @return {!Promise<!Object>}
@@ -126,7 +131,7 @@ class ImageUsage extends Gatherer {
           startTime: record.startTime,
           endTime: record.endTime,
           responseReceivedTime: record.responseReceivedTime,
-          mimeType: record._mimeType
+          mimeType: record._mimeType,
         };
       }
 

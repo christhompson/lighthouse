@@ -71,7 +71,8 @@ class TraceProcessor {
       // Negative results are within idle time (0ms wait by definition), so clamp at zero.
       results.push({
         percentile,
-        time: Math.max(0, (percentileTime - completedTime) / remainingCount) + BASE_RESPONSE_LATENCY
+        time: Math.max(0, (percentileTime - completedTime) / remainingCount) +
+          BASE_RESPONSE_LATENCY,
       });
     }
 
@@ -89,10 +90,10 @@ class TraceProcessor {
    * @return {!Array<{percentile: number, time: number}>}
    */
   static getRiskToResponsiveness(
-    tabTrace,
-    startTime = 0,
-    endTime = tabTrace.timings.traceEnd,
-    percentiles = [0.5, 0.75, 0.9, 0.99, 1]
+      tabTrace,
+      startTime = 0,
+      endTime = tabTrace.timings.traceEnd,
+      percentiles = [0.5, 0.75, 0.9, 0.99, 1]
   ) {
     const totalTime = endTime - startTime;
     percentiles.sort((a, b) => a - b);
@@ -136,7 +137,7 @@ class TraceProcessor {
 
     return {
       durations,
-      clippedLength
+      clippedLength,
     };
   }
 
@@ -167,5 +168,7 @@ class TraceProcessor {
     return topLevelEvents;
   }
 }
+
+TraceProcessor.SCHEDULABLE_TASK_TITLE = SCHEDULABLE_TASK_TITLE;
 
 module.exports = TraceProcessor;

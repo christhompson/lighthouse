@@ -13,7 +13,6 @@ const Gatherer = require('./gatherer');
  * TODO: Instead of abusing a loadPage pass for this test, it could likely just do an XHR instead
  */
 class HTTPRedirect extends Gatherer {
-
   constructor() {
     super();
     this._preRedirectURL = undefined;
@@ -34,7 +33,7 @@ class HTTPRedirect extends Gatherer {
     const securityPromise = options.driver.getSecurityState()
       .then(state => {
         return {
-          value: state.schemeIsCryptographic
+          value: state.schemeIsCryptographic,
         };
       });
 
@@ -49,7 +48,7 @@ class HTTPRedirect extends Gatherer {
 
     return Promise.race([
       securityPromise,
-      timeoutPromise
+      timeoutPromise,
     ]).then(result => {
       // Clear timeout. No effect if it won, no need to wait if it lost.
       clearTimeout(noSecurityChangesTimeout);

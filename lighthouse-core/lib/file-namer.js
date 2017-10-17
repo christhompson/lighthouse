@@ -20,14 +20,14 @@ function getFilenamePrefix(results) {
 
   const timeStr = date.toLocaleTimeString('en-US', {hour12: false});
   const dateParts = date.toLocaleDateString('en-US', {
-    year: 'numeric', month: '2-digit', day: '2-digit'
+    year: 'numeric', month: '2-digit', day: '2-digit',
   }).split('/');
   dateParts.unshift(dateParts.pop());
   const dateStr = dateParts.join('-');
 
   const filenamePrefix = `${hostname}_${dateStr}_${timeStr}`;
   // replace characters that are unfriendly to filenames
-  return filenamePrefix.replace(/[\/\?<>\\:\*\|":]/g, '-');
+  return filenamePrefix.replace(/[/?<>\\:*|":]/g, '-');
 }
 
 let URLConstructor;

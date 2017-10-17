@@ -24,18 +24,18 @@ module.exports = {
       'manifest',
       'chrome-console-messages',
       'image-usage',
-      // 'css-usage',
       'accessibility',
       'dobetterweb/all-event-listeners',
       'dobetterweb/anchors-with-no-rel-noopener',
       'dobetterweb/appcache',
       'dobetterweb/domstats',
+      'dobetterweb/js-libraries',
       'dobetterweb/optimized-images',
       'dobetterweb/password-inputs-with-prevented-paste',
       'dobetterweb/response-compression',
       'dobetterweb/tags-blocking-first-paint',
       'dobetterweb/websql',
-    ]
+    ],
   },
   {
     passName: 'offlinePass',
@@ -46,7 +46,7 @@ module.exports = {
       'service-worker',
       'offline',
       'start-url',
-    ]
+    ],
   },
   {
     passName: 'redirectPass',
@@ -58,9 +58,8 @@ module.exports = {
     gatherers: [
       'http-redirect',
       'html-without-javascript',
-    ]
+    ],
   }],
-
   audits: [
     'is-on-https',
     'redirects-http',
@@ -73,16 +72,19 @@ module.exports = {
     'speed-index-metric',
     'screenshot-thumbnails',
     'estimated-input-latency',
-    // 'time-to-firstbyte',
+    'errors-in-console',
+    'time-to-first-byte',
     'first-interactive',
     'consistently-interactive',
     'user-timings',
     'critical-request-chains',
+    'redirects',
     'webapp-install-banner',
     'splash-screen',
     'themed-omnibox',
     'manifest-short-name-length',
     'content-width',
+    'image-aspect-ratio',
     'deprecations',
     'manual/pwa-cross-browser',
     'manual/pwa-page-transitions',
@@ -123,7 +125,6 @@ module.exports = {
     'accessibility/video-caption',
     'accessibility/video-description',
     'byte-efficiency/total-byte-weight',
-    // 'byte-efficiency/unused-css-rules',
     'byte-efficiency/offscreen-images',
     'byte-efficiency/uses-webp-images',
     'byte-efficiency/uses-optimized-images',
@@ -136,6 +137,7 @@ module.exports = {
     'dobetterweb/link-blocking-first-paint',
     'dobetterweb/no-document-write',
     'dobetterweb/no-mutation-events',
+    'dobetterweb/no-vulnerable-libraries',
     'dobetterweb/no-websql',
     'dobetterweb/notification-on-start',
     'dobetterweb/password-inputs-can-be-pasted-into',
@@ -147,53 +149,53 @@ module.exports = {
   groups: {
     'perf-metric': {
       title: 'Metrics',
-      description: 'These metrics encapsulate your app\'s performance across a number of dimensions.'
+      description: 'These metrics encapsulate your app\'s performance across a number of dimensions.',
     },
     'perf-hint': {
       title: 'Opportunities',
-      description: 'These are opportunities to speed up your application by optimizing the following resources.'
+      description: 'These are opportunities to speed up your application by optimizing the following resources.',
     },
     'perf-info': {
       title: 'Diagnostics',
-      description: 'More information about the performance of your application.'
+      description: 'More information about the performance of your application.',
     },
     'a11y-color-contrast': {
       title: 'Color Contrast Is Satisfactory',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to improve the legibility of your content.',
     },
     'a11y-describe-contents': {
       title: 'Elements Describe Contents Well',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to make your content easier to understand for a user of assistive technology, like a screen reader.',
     },
     'a11y-well-structured': {
       title: 'Elements Are Well Structured',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to make sure your HTML is appropriately structured.',
     },
     'a11y-aria': {
       title: 'ARIA Attributes Follow Best Practices',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to improve the usage of ARIA in your application which may enhance the experience for users of assistive technology, like a screen reader.',
     },
     'a11y-correct-attributes': {
       title: 'Elements Use Attributes Correctly',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to improve the configuration of your HTML elements.',
     },
     'a11y-element-names': {
       title: 'Elements Have Discernable Names',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to improve the semantics of the controls in your application. This may enhance the experience for users of assistive technology, like a screen reader.',
     },
     'a11y-language': {
       title: 'Page Specifies Valid Language',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to improve the interpretation of your content by users in different locales.',
     },
     'a11y-meta': {
       title: 'Meta Tags Used Properly',
-      description: 'Screen readers and other assistive technologies require annotations to understand otherwise ambiguous content.'
+      description: 'These are opportunities to improve the user experience of your site.',
     },
     'manual-pwa-checks': {
       title: 'Manual checks to verify',
       description: 'These checks are required by the baseline ' +
           '[PWA Checklist](https://developers.google.com/web/progressive-web-apps/checklist) but are ' +
-          'not automatically checked by Lighthouse. They do not affect your score but it\'s important that you verify them manually.'
+          'not automatically checked by Lighthouse. They do not affect your score but it\'s important that you verify them manually.',
     },
   },
   categories: {
@@ -216,7 +218,7 @@ module.exports = {
         {id: 'pwa-cross-browser', weight: 0, group: 'manual-pwa-checks'},
         {id: 'pwa-page-transitions', weight: 0, group: 'manual-pwa-checks'},
         {id: 'pwa-each-page-has-url', weight: 0, group: 'manual-pwa-checks'},
-      ]
+      ],
     },
     'performance': {
       name: 'Performance',
@@ -229,61 +231,60 @@ module.exports = {
         {id: 'estimated-input-latency', weight: 1, group: 'perf-metric'},
         {id: 'link-blocking-first-paint', weight: 0, group: 'perf-hint'},
         {id: 'script-blocking-first-paint', weight: 0, group: 'perf-hint'},
-        // {id: 'unused-css-rules', weight: 0},
         {id: 'uses-responsive-images', weight: 0, group: 'perf-hint'},
         {id: 'offscreen-images', weight: 0, group: 'perf-hint'},
         {id: 'uses-optimized-images', weight: 0, group: 'perf-hint'},
         {id: 'uses-webp-images', weight: 0, group: 'perf-hint'},
         {id: 'uses-request-compression', weight: 0, group: 'perf-hint'},
-        // {id: 'time-to-firstbyte', weight: 0, group: 'perf-hint'},
+        {id: 'time-to-first-byte', weight: 0, group: 'perf-hint'},
+        {id: 'redirects', weight: 0, group: 'perf-hint'},
         {id: 'total-byte-weight', weight: 0, group: 'perf-info'},
         {id: 'dom-size', weight: 0, group: 'perf-info'},
         {id: 'critical-request-chains', weight: 0, group: 'perf-info'},
         {id: 'user-timings', weight: 0, group: 'perf-info'},
-
         {id: 'screenshot-thumbnails', weight: 0},
-      ]
+      ],
     },
     'accessibility': {
       name: 'Accessibility',
       description: 'These checks highlight opportunities to [improve the accessibility of your app](https://developers.google.com/web/fundamentals/accessibility).',
       audits: [
         {id: 'accesskeys', weight: 1, group: 'a11y-correct-attributes'},
-        {id: 'aria-allowed-attr', weight: 1, group: 'a11y-aria'},
-        {id: 'aria-required-attr', weight: 1, group: 'a11y-aria'},
-        {id: 'aria-required-children', weight: 1, group: 'a11y-aria'},
-        {id: 'aria-required-parent', weight: 1, group: 'a11y-aria'},
-        {id: 'aria-roles', weight: 1, group: 'a11y-aria'},
-        {id: 'aria-valid-attr-value', weight: 1, group: 'a11y-aria'},
-        {id: 'aria-valid-attr', weight: 1, group: 'a11y-aria'},
-        {id: 'audio-caption', weight: 1, group: 'a11y-correct-attributes'},
-        {id: 'button-name', weight: 1, group: 'a11y-element-names'},
-        {id: 'bypass', weight: 1, group: 'a11y-describe-contents'},
-        {id: 'color-contrast', weight: 1, group: 'a11y-color-contrast'},
+        {id: 'aria-allowed-attr', weight: 3, group: 'a11y-aria'},
+        {id: 'aria-required-attr', weight: 2, group: 'a11y-aria'},
+        {id: 'aria-required-children', weight: 5, group: 'a11y-aria'},
+        {id: 'aria-required-parent', weight: 2, group: 'a11y-aria'},
+        {id: 'aria-roles', weight: 3, group: 'a11y-aria'},
+        {id: 'aria-valid-attr-value', weight: 2, group: 'a11y-aria'},
+        {id: 'aria-valid-attr', weight: 5, group: 'a11y-aria'},
+        {id: 'audio-caption', weight: 4, group: 'a11y-correct-attributes'},
+        {id: 'button-name', weight: 10, group: 'a11y-element-names'},
+        {id: 'bypass', weight: 10, group: 'a11y-describe-contents'},
+        {id: 'color-contrast', weight: 6, group: 'a11y-color-contrast'},
         {id: 'definition-list', weight: 1, group: 'a11y-well-structured'},
         {id: 'dlitem', weight: 1, group: 'a11y-well-structured'},
-        {id: 'document-title', weight: 1, group: 'a11y-describe-contents'},
-        {id: 'duplicate-id', weight: 1, group: 'a11y-well-structured'},
-        {id: 'frame-title', weight: 1, group: 'a11y-describe-contents'},
-        {id: 'html-has-lang', weight: 1, group: 'a11y-language'},
+        {id: 'document-title', weight: 2, group: 'a11y-describe-contents'},
+        {id: 'duplicate-id', weight: 5, group: 'a11y-well-structured'},
+        {id: 'frame-title', weight: 5, group: 'a11y-describe-contents'},
+        {id: 'html-has-lang', weight: 4, group: 'a11y-language'},
         {id: 'html-lang-valid', weight: 1, group: 'a11y-language'},
-        {id: 'image-alt', weight: 1, group: 'a11y-correct-attributes'},
+        {id: 'image-alt', weight: 8, group: 'a11y-correct-attributes'},
         {id: 'input-image-alt', weight: 1, group: 'a11y-correct-attributes'},
-        {id: 'label', weight: 1, group: 'a11y-describe-contents'},
+        {id: 'label', weight: 10, group: 'a11y-describe-contents'},
         {id: 'layout-table', weight: 1, group: 'a11y-describe-contents'},
-        {id: 'link-name', weight: 1, group: 'a11y-element-names'},
-        {id: 'list', weight: 1, group: 'a11y-well-structured'},
-        {id: 'listitem', weight: 1, group: 'a11y-well-structured'},
+        {id: 'link-name', weight: 9, group: 'a11y-element-names'},
+        {id: 'list', weight: 5, group: 'a11y-well-structured'},
+        {id: 'listitem', weight: 4, group: 'a11y-well-structured'},
         {id: 'meta-refresh', weight: 1, group: 'a11y-meta'},
-        {id: 'meta-viewport', weight: 1, group: 'a11y-meta'},
-        {id: 'object-alt', weight: 1, group: 'a11y-describe-contents'},
-        {id: 'tabindex', weight: 1, group: 'a11y-correct-attributes'},
+        {id: 'meta-viewport', weight: 3, group: 'a11y-meta'},
+        {id: 'object-alt', weight: 4, group: 'a11y-describe-contents'},
+        {id: 'tabindex', weight: 4, group: 'a11y-correct-attributes'},
         {id: 'td-headers-attr', weight: 1, group: 'a11y-correct-attributes'},
         {id: 'th-has-data-cells', weight: 1, group: 'a11y-correct-attributes'},
         {id: 'valid-lang', weight: 1, group: 'a11y-language'},
-        {id: 'video-caption', weight: 1, group: 'a11y-describe-contents'},
-        {id: 'video-description', weight: 1, group: 'a11y-describe-contents'},
-      ]
+        {id: 'video-caption', weight: 4, group: 'a11y-describe-contents'},
+        {id: 'video-description', weight: 3, group: 'a11y-describe-contents'},
+      ],
     },
     'best-practices': {
       name: 'Best Practices',
@@ -298,11 +299,14 @@ module.exports = {
         {id: 'no-document-write', weight: 1},
         {id: 'external-anchors-use-rel-noopener', weight: 1},
         {id: 'geolocation-on-start', weight: 1},
+        {id: 'no-vulnerable-libraries', weight: 1},
         {id: 'notification-on-start', weight: 1},
         {id: 'deprecations', weight: 1},
         {id: 'manifest-short-name-length', weight: 1},
         {id: 'password-inputs-can-be-pasted-into', weight: 1},
-      ]
-    }
-  }
+        {id: 'errors-in-console', weight: 1},
+        {id: 'image-aspect-ratio', weight: 1},
+      ],
+    },
+  },
 };

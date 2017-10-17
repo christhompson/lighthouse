@@ -52,23 +52,29 @@ connection.sendCommand = function(command, params) {
       return Promise.resolve({root: {nodeId: 249}});
     case 'DOM.querySelector':
       return Promise.resolve({
-        nodeId: params.selector === 'invalid' ? 0 : 231
+        nodeId: params.selector === 'invalid' ? 0 : 231,
       });
     case 'DOM.querySelectorAll':
       return Promise.resolve({
-        nodeIds: params.selector === 'invalid' ? [] : [231]
+        nodeIds: params.selector === 'invalid' ? [] : [231],
       });
+    case 'Runtime.evaluate':
+      return Promise.resolve({result: {value: 123}});
     case 'Runtime.getProperties':
       return Promise.resolve({
         result: params.objectId === 'invalid' ? [] : [{
           name: 'test',
           value: {
-            value: '123'
-          }
+            value: '123',
+          },
         }, {
-          name: 'novalue'
-        }]
+          name: 'novalue',
+        }],
       });
+    case 'Page.getResourceTree':
+      return Promise.resolve({frameTree: {frame: {id: 1}}});
+    case 'Page.createIsolatedWorld':
+      return Promise.resolve({executionContextId: 1});
     case 'Page.enable':
     case 'Tracing.start':
     case 'ServiceWorker.enable':
@@ -131,6 +137,30 @@ describe('Browser Driver', () => {
     });
   });
 
+  it('evaluates an expression', () => {
+    return driverStub.evaluateAsync('120 + 3').then(value => {
+      assert.deepEqual(value, 123);
+      assert.equal(sendCommandParams[0].command, 'Runtime.evaluate');
+    });
+  });
+
+  it('evaluates an expression in isolation', () => {
+    return driverStub.evaluateAsync('120 + 3', {useIsolation: true}).then(value => {
+      assert.deepEqual(value, 123);
+
+      assert.ok(sendCommandParams.length > 1, 'did not create execution context');
+      const evaluateCommand = sendCommandParams.find(data => data.command === 'Runtime.evaluate');
+      assert.equal(evaluateCommand.params.contextId, 1);
+
+      // test repeat isolation evaluations
+      sendCommandParams = [];
+      return driverStub.evaluateAsync('120 + 3', {useIsolation: true});
+    }).then(value => {
+      assert.deepEqual(value, 123);
+      assert.ok(sendCommandParams.length === 1, 'created unnecessary 2nd execution context');
+    });
+  });
+
   it('will track redirects through gotoURL load', () => {
     const delay = _ => new Promise(resolve => setTimeout(resolve));
 
@@ -167,8 +197,8 @@ describe('Browser Driver', () => {
     const loadOptions = {
       waitForLoad: true,
       config: {
-        networkQuietThresholdMs: 1
-      }
+        networkQuietThresholdMs: 1,
+      },
     };
 
     return driver.gotoURL(startUrl, loadOptions).then(loadedUrl => {
@@ -220,13 +250,13 @@ describe('Multiple tab check', () => {
     const pageUrl = 'https://example.com/';
     driverStub.once = createOnceStub({
       'ServiceWorker.workerRegistrationUpdated': {
-        registrations: []
+        registrations: [],
       },
     });
 
     driverStub.on = createOnceStub({
       'ServiceWorker.workerVersionUpdated': {
-        versions: []
+        versions: [],
       },
     });
 
@@ -242,18 +272,18 @@ describe('Multiple tab check', () => {
       createSWRegistration(1, secondUrl),
     ];
     const versions = [
-      createActiveWorker(1, swUrl, ['uniqueId'])
+      createActiveWorker(1, swUrl, ['uniqueId']),
     ];
 
     driverStub.once = createOnceStub({
       'ServiceWorker.workerRegistrationUpdated': {
-        registrations
+        registrations,
       },
     });
 
     driverStub.on = createOnceStub({
       'ServiceWorker.workerVersionUpdated': {
-        versions
+        versions,
       },
     });
 
@@ -267,18 +297,18 @@ describe('Multiple tab check', () => {
       createSWRegistration(1, pageUrl),
     ];
     const versions = [
-      createActiveWorker(1, swUrl, ['uniqueId'])
+      createActiveWorker(1, swUrl, ['uniqueId']),
     ];
 
     driverStub.once = createOnceStub({
       'ServiceWorker.workerRegistrationUpdated': {
-        registrations
-      }
+        registrations,
+      },
     });
 
     driverStub.on = createOnceStub({
       'ServiceWorker.workerVersionUpdated': {
-        versions
+        versions,
       },
     });
 
@@ -297,13 +327,13 @@ describe('Multiple tab check', () => {
 
     driverStub.once = createOnceStub({
       'ServiceWorker.workerRegistrationUpdated': {
-        registrations
+        registrations,
       },
     });
 
     driverStub.on = createOnceStub({
       'ServiceWorker.workerVersionUpdated': {
-        versions
+        versions,
       },
     });
 
@@ -318,7 +348,7 @@ describe('Multiple tab check', () => {
 
     driverStub.once = createOnceStub({
       'ServiceWorker.workerRegistrationUpdated': {
-        registrations
+        registrations,
       },
     });
 
@@ -330,7 +360,7 @@ describe('Multiple tab check', () => {
           cb({
             versions: [
               createActiveWorker(1, swUrl, [], 'activated'),
-            ]
+            ],
           });
         }, 1000);
 

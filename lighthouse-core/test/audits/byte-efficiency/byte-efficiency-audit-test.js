@@ -12,6 +12,33 @@ const NBSP = '\xa0';
 /* eslint-env mocha */
 
 describe('Byte efficiency base audit', () => {
+  describe('#estimateTransferSize', () => {
+    const estimate = ByteEfficiencyAudit.estimateTransferSize;
+
+    it('should estimate by compression ratio when no network record available', () => {
+      const result = estimate(undefined, 1000, '', .345);
+      assert.equal(result, 345);
+    });
+
+    it('should return transferSize when asset matches', () => {
+      const _resourceType = {_name: 'stylesheet'};
+      const result = estimate({_transferSize: 1234, _resourceType}, 10000, 'stylesheet');
+      assert.equal(result, 1234);
+    });
+
+    it('should estimate by network compression ratio when asset does not match', () => {
+      const _resourceType = {_name: 'other'};
+      const result = estimate({_resourceSize: 2000, _transferSize: 1000, _resourceType}, 100);
+      assert.equal(result, 50);
+    });
+
+    it('should not error when missing resource size', () => {
+      const _resourceType = {_name: 'other'};
+      const result = estimate({_transferSize: 1000, _resourceType}, 100);
+      assert.equal(result, 100);
+    });
+  });
+
   it('should format as extendedInfo', () => {
     const result = ByteEfficiencyAudit.createAuditResult({
       headings: [{key: 'value', text: 'Label'}],
@@ -71,7 +98,7 @@ describe('Byte efficiency base audit', () => {
       headings: [{key: 'value', text: 'Label'}],
       results: [
         {wastedBytes: 2048, totalBytes: 4096, wastedPercent: 50},
-        {wastedBytes: 1986, totalBytes: 5436}
+        {wastedBytes: 1986, totalBytes: 5436},
       ],
     }, 1000);
 
@@ -87,7 +114,7 @@ describe('Byte efficiency base audit', () => {
       results: [
         {wastedBytes: 350, totalBytes: 700, wastedPercent: 50},
         {wastedBytes: 326, totalBytes: 1954},
-        {wastedBytes: 251, totalBytes: 899}
+        {wastedBytes: 251, totalBytes: 899},
       ],
     }, 1000);
 
@@ -134,8 +161,8 @@ describe('Byte efficiency base audit', () => {
       results: [
         {wastedBytes: 22416, totalBytes: 104330},
         {wastedBytes: 512, totalBytes: 1024},
-        {wastedBytes: 341, totalBytes: 1024}
-      ]
+        {wastedBytes: 341, totalBytes: 1024},
+      ],
     }, 2048);
 
     assert.equal(result.extendedInfo.value.results[0].potentialSavings, `22${NBSP}KB (21%)`);

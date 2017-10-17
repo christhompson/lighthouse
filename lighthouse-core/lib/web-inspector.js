@@ -24,25 +24,25 @@ module.exports = (function() {
     global.window = global;
   }
 
-  global.Runtime = {};
-  global.Runtime.experiments = {
-    isEnabled(experimentName) {
-      switch (experimentName) {
-        case 'timelineLatencyInfo':
-          return true;
-        default:
-          return false;
-      }
-    }
-  };
+  global.Runtime = global.Runtime || {};
+
+  // Required for devtools-timeline-model
+  global.Runtime.experiments = global.Runtime.experiments || {};
+  global.Runtime.experiments.isEnabled = global.Runtime.experiments.isEnabled || (_ => false);
+
+  const _queryParam = global.Runtime.queryParam;
   global.Runtime.queryParam = function(arg) {
     switch (arg) {
       case 'remoteFrontend':
         return false;
       case 'ws':
         return false;
-      default:
-        throw Error('Mock queryParam case not implemented.');
+      default: {
+        if (_queryParam) {
+          return _queryParam.call(global.Runtime, arg);
+        }
+        throw new Error('Mock queryParam case not implemented.');
+      }
     }
   };
 
@@ -50,7 +50,7 @@ module.exports = (function() {
   global.WorkerRuntime = {};
 
   global.Protocol = {
-    Agents() {}
+    Agents() {},
   };
 
   global.WebInspector = {};
@@ -60,20 +60,20 @@ module.exports = (function() {
       addChangeListener() {},
       get() {
         return false;
-      }
+      },
     },
     monitoringXHREnabled: {
       addChangeListener() {},
       get() {
         return false;
-      }
+      },
     },
     showNativeFunctionsInJSProfile: {
       addChangeListener() {},
       get() {
         return true;
-      }
-    }
+      },
+    },
   };
   WebInspector.moduleSetting = function(settingName) {
     return this._moduleSettings[settingName];
@@ -84,21 +84,21 @@ module.exports = (function() {
     RequestMixedContentType: {
       Blockable: 'blockable',
       OptionallyBlockable: 'optionally-blockable',
-      None: 'none'
+      None: 'none',
     },
     BlockedReason: {
       CSP: 'csp',
       MixedContent: 'mixed-content',
       Origin: 'origin',
       Inspector: 'inspector',
-      Other: 'other'
+      Other: 'other',
     },
     InitiatorType: {
       Other: 'other',
       Parser: 'parser',
       Redirect: 'redirect',
-      Script: 'script'
-    }
+      Script: 'script',
+    },
   };
 
   // Enum from SecurityState enum in protocol's Security domain
@@ -109,8 +109,8 @@ module.exports = (function() {
       Insecure: 'insecure',
       Warning: 'warning',
       Secure: 'secure',
-      Info: 'info'
-    }
+      Info: 'info',
+    },
   };
   // From https://chromium.googlesource.com/chromium/src/third_party/WebKit/Source/devtools/+/master/protocol.json#93
   global.PageAgent = {
@@ -127,8 +127,8 @@ module.exports = (function() {
       EventSource: 'eventsource',
       WebSocket: 'websocket',
       Manifest: 'manifest',
-      Other: 'other'
-    }
+      Other: 'other',
+    },
   };
   // Dependencies for network-recorder
   require('chrome-devtools-frontend/front_end/common/Object.js');
@@ -144,7 +144,7 @@ module.exports = (function() {
   // Dependencies for timeline-model
   WebInspector.targetManager = {
     observeTargets() { },
-    addEventListener() { }
+    addEventListener() { },
   };
   WebInspector.settings = {
     createSetting() {
@@ -152,12 +152,12 @@ module.exports = (function() {
         get() {
           return false;
         },
-        addChangeListener() {}
+        addChangeListener() {},
       };
-    }
+    },
   };
   WebInspector.console = {
-    error() {}
+    error() {},
   };
   WebInspector.VBox = function() {};
   WebInspector.HBox = function() {};
@@ -190,19 +190,19 @@ module.exports = (function() {
   WebInspector.DeferredTempFile = function() {};
   WebInspector.DeferredTempFile.prototype = {
     write: function() {},
-    finishWriting: function() {}
+    finishWriting: function() {},
   };
 
   // Mock for WebInspector code that writes to console.
   WebInspector.ConsoleMessage = function() {};
   WebInspector.ConsoleMessage.MessageSource = {
-    Network: 'network'
+    Network: 'network',
   };
   WebInspector.ConsoleMessage.MessageLevel = {
-    Log: 'log'
+    Log: 'log',
   };
   WebInspector.ConsoleMessage.MessageType = {
-    Log: 'log'
+    Log: 'log',
   };
 
   // Mock NetworkLog
@@ -223,7 +223,7 @@ module.exports = (function() {
         return;
       }
       this._requests.set(request.url, request);
-    }
+    },
   };
 
   // Dependencies for color parsing.
@@ -249,11 +249,11 @@ module.exports = (function() {
       enable() {},
       getResponseBody() {
         throw new Error('Use driver.getRequestContent() for network request content');
-      }
+      },
     };
     const fakeConsoleModel = {
       addMessage() {},
-      target() {}
+      target() {},
     };
     const fakeTarget = {
       _modelByConstructor: new Map(),
@@ -264,7 +264,7 @@ module.exports = (function() {
         return fakeNetworkAgent;
       },
       registerNetworkDispatcher() { },
-      model() { }
+      model() { },
     };
 
     fakeTarget.networkManager = new WebInspector.NetworkManager(fakeTarget);
@@ -294,7 +294,7 @@ module.exports = (function() {
     /** @type {!{properties: !Array<!Gonzales.Node>, node: !Gonzales.Node}} */
     const rootBlock = {
       properties: [],
-      node: ast
+      node: ast,
     };
     /** @type {!Array<!{properties: !Array<!Gonzales.Node>, node: !Gonzales.Node}>} */
     const blocks = [rootBlock];

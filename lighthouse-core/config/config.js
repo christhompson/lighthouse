@@ -31,16 +31,16 @@ function cleanTrace(trace) {
     return {
       pid: evt.pid,
       tid: evt.tid,
-      ts: ts || 0,  // default to 0 for now
+      ts: ts || 0, // default to 0 for now
       ph: 'I',
       cat: 'disabled-by-default-devtools.timeline',
       name: 'TracingStartedInPage',
       args: {
         data: {
-          page: evt.frame
-        }
+          page: evt.frame,
+        },
       },
-      s: 't'
+      s: 't',
     };
   };
 
@@ -70,7 +70,7 @@ function cleanTrace(trace) {
         pid: evt.pid,
         tid: evt.tid,
         frame: frame,
-        count: 0
+        count: 0,
       };
       countsByThread[name] = counter;
       threads.push(counter);
@@ -227,7 +227,7 @@ function expandArtifacts(artifacts) {
       // traceEvents property. Normalize to new format.
       if (Array.isArray(trace)) {
         trace = {
-          traceEvents: trace
+          traceEvents: trace,
         };
       }
       trace = cleanTrace(trace);
@@ -473,10 +473,10 @@ class Config {
     return new Set(audits.map(audit => audit.id));
   }
 
- /**
-  * @param {{categories: !Object<string, {name: string}>}} config
-  * @return {!Array<{id: string, name: string}>}
-  */
+  /**
+   * @param {{categories: !Object<string, {name: string}>}} config
+   * @return {!Array<{id: string, name: string}>}
+   */
   static getCategories(config) {
     return Object.keys(config.categories).map(id => {
       const name = config.categories[id].name;

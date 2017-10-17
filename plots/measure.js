@@ -46,7 +46,7 @@ const constants = require('./constants.js');
 const utils = require('./utils.js');
 const config = require('../lighthouse-core/config/plots-config.js');
 const lighthouse = require('../lighthouse-core/index.js');
-const ChromeLauncher = require('../chrome-launcher/chrome-launcher.js');
+const ChromeLauncher = require('chrome-launcher');
 const Printer = require('../lighthouse-cli/printer');
 const assetSaver = require('../lighthouse-core/lib/asset-saver.js');
 
@@ -221,7 +221,7 @@ function analyzeWithLighthouse(launcher, url, outputPath, assetsPath, {ignoreRun
  * @return {string}
  */
 function sanitize(string) {
-  const illegalRe = /[\/\?<>\\:\*\|":]/g;
+  const illegalRe = /[/?<>\\:*|":]/g;
   const controlRe = /[\x00-\x1f\x80-\x9f]/g; // eslint-disable-line no-control-regex
   const reservedRe = /^\.+$/;
 

@@ -13,7 +13,6 @@
 const Audit = require('../audit');
 
 class AppCacheManifestAttr extends Audit {
-
   /**
    * @return {!AuditMeta}
    */
@@ -25,7 +24,7 @@ class AppCacheManifestAttr extends Audit {
       failureDescription: 'Uses Application Cache',
       helpText: 'Application Cache is deprecated. ' +
           '[Learn more](https://developers.google.com/web/tools/lighthouse/audits/appcache).',
-      requiredArtifacts: ['AppCacheManifest']
+      requiredArtifacts: ['AppCacheManifest'],
     };
   }
 
@@ -40,7 +39,7 @@ class AppCacheManifestAttr extends Audit {
 
     return {
       rawValue: !usingAppcache,
-      debugString
+      debugString,
     };
   }
 }

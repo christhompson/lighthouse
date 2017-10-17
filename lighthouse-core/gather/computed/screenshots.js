@@ -9,7 +9,6 @@ const ComputedArtifact = require('./computed-artifact');
 const DevtoolsTimelineModel = require('../../lib/traces/devtools-timeline-model');
 
 class ScreenshotFilmstrip extends ComputedArtifact {
-
   get name() {
     return 'Screenshots';
   }
@@ -32,7 +31,7 @@ class ScreenshotFilmstrip extends ComputedArtifact {
     return Promise.all(frameFetches).then(images => {
       const result = filmStripFrames.map((frame, i) => ({
         timestamp: frame.timestamp,
-        datauri: images[i]
+        datauri: images[i],
       }));
       return result;
     });

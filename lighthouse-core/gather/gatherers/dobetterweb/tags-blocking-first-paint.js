@@ -4,7 +4,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
- /**
+/**
   * @fileoverview
   *   Identifies stylesheets, HTML Imports, and scripts that potentially block
   *   the first paint of the page by running several scripts in the page context.
@@ -51,7 +51,7 @@ function collectTagsThatBlockFirstPaint() {
             href: tag.href,
             rel: tag.rel,
             media: tag.media,
-            disabled: tag.disabled
+            disabled: tag.disabled,
           };
         });
       resolve(tagList);
@@ -82,7 +82,7 @@ function filteredAndIndexedByUrl(networkRecords) {
         isLinkPreload: record.isLinkPreload,
         transferSize: record._transferSize,
         startTime: record._startTime,
-        endTime: record._endTime
+        endTime: record._endTime,
       };
     }
 

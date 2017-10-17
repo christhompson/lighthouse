@@ -16,7 +16,6 @@ const Audit = require('../audit');
 const EventHelpers = require('../../lib/event-helpers');
 
 class NoMutationEventsAudit extends Audit {
-
   static get MUTATION_EVENTS() {
     return [
       'DOMAttrModified',
@@ -27,7 +26,7 @@ class NoMutationEventsAudit extends Audit {
       'DOMNodeInsertedIntoDocument',
       'DOMNodeRemoved',
       'DOMNodeRemovedFromDocument',
-      'DOMSubtreeModified'
+      'DOMSubtreeModified',
     ];
   }
 
@@ -42,7 +41,7 @@ class NoMutationEventsAudit extends Audit {
       failureDescription: 'Uses Mutation Events in its own scripts',
       helpText: 'Mutation Events are deprecated and harm performance. Consider using Mutation ' +
           'Observers instead. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/mutation-events).',
-      requiredArtifacts: ['URL', 'EventListeners']
+      requiredArtifacts: ['URL', 'EventListeners'],
     };
   }
 
@@ -73,7 +72,7 @@ class NoMutationEventsAudit extends Audit {
       {key: 'type', itemType: 'code', text: 'Event'},
       {key: 'line', itemType: 'text', text: 'Line'},
       {key: 'col', itemType: 'text', text: 'Col'},
-      {key: 'pre', itemType: 'code', text: 'Snippet'}
+      {key: 'pre', itemType: 'code', text: 'Snippet'},
     ];
     const details = NoMutationEventsAudit.makeTableDetails(headings, groupedResults);
 
@@ -82,10 +81,10 @@ class NoMutationEventsAudit extends Audit {
       extendedInfo: {
         value: {
           results: groupedResults,
-        }
+        },
       },
       details,
-      debugString
+      debugString,
     };
   }
 }

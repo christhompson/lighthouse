@@ -122,7 +122,7 @@ window.runLighthouseInExtension = function(options, categoryIDs) {
   log.setLevel('info');
   const connection = new ExtensionProtocol();
   // return enableOtherChromeExtensions(false)
-    // .then(_ => connection.getCurrentTabURL())
+  // .then(_ => connection.getCurrentTabURL())
   return connection.getCurrentTabURL()
     .then(url => window.runLighthouseForConnection(connection, url, options, categoryIDs))
     .then(results => {
@@ -184,7 +184,7 @@ window.getDefaultCategories = function() {
 window.saveSettings = function(settings) {
   const storage = {
     [STORAGE_KEY]: {},
-    [SETTINGS_KEY]: {}
+    [SETTINGS_KEY]: {},
   };
 
   // Stash selected categories.
@@ -221,13 +221,13 @@ window.loadSettings = function() {
       const savedCategories = Object.assign(defaultCategories, result[STORAGE_KEY]);
 
       const defaultSettings = {
-        disableExtensions: disableExtensionsDuringRun
+        disableExtensions: disableExtensionsDuringRun,
       };
       const savedSettings = Object.assign(defaultSettings, result[SETTINGS_KEY]);
 
       resolve({
         selectedCategories: savedCategories,
-        disableExtensions: savedSettings.disableExtensions
+        disableExtensions: savedSettings.disableExtensions,
       });
     });
   });
