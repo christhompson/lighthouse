@@ -133,15 +133,7 @@ NOTE: specifying an output path with multiple formats ignores your specified ext
 
 #### Notes on Error Reporting
 
-The first time you run the CLI you will be prompted with a message asking you if Lighthouse can anonymously report runtime exceptions.
-
-```
-? Lighthouse is requesting permission to anonymously report back runtime exceptions.
-  This can include data such as the test URL, its subresources, your OS, Chrome version, and Lighthouse version.
-  May Lighthouse report this data to aid in improving the tool? (y/N)
-```
-
-The Lighthouse team uses this information to detect new bugs and avoid regressions. Your response to this prompt will be saved to your home directory `~/.config/configstore/lighthouse.json` and used on future runs. If you use the flag `--enable-error-reporting`, error reporting will be on for the run regardless of your previous response. If you use the flag `--no-enable-error-reporting`, fail to answer the prompt, or have the `CI` environment variable set, error reporting will be off for the run.
+The first time you run the CLI you will be prompted with a message asking you if Lighthouse can anonymously report runtime exceptions. The Lighthouse team uses this information to detect new bugs and avoid regressions. Opting out will not affect your ability to use Lighthouse in any way. [Learn more](https://github.com/GoogleChrome/lighthouse/blob/master/docs/error-reporting.md).
 
 ## Viewing a report
 

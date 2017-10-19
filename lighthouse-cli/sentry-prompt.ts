@@ -10,9 +10,9 @@ const log = require('lighthouse-logger');
 const MAXIMUM_WAIT_TIME = 20 * 1000;
 // clang-format off
 const MESSAGE =
-  `${log.reset}Lighthouse is requesting permission to anonymously report back runtime exceptions.\n  ` +
-  `${log.reset}This can include data such as the test URL, its subresources, your OS, Chrome version, and Lighthouse version.\n  ` +
-  `May ${log.green}Lighthouse${log.reset} ${log.bold}report this data to aid in improving the tool?`;
+  `${log.reset}We're constantly trying to improve Lighthouse and its reliability.\n  ` +
+  `May we anonymously report runtime exceptions to improve the tool over time?\n  ` +
+  `${log.reset}Learn more: https://github.com/GoogleChrome/lighthouse/blob/master/docs/error-reporting.md`;
 // clang-format on
 
 async function prompt() {
