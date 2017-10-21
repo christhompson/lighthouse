@@ -16,6 +16,7 @@ import {runLighthouse} from './run';
 const log = require('lighthouse-logger');
 const perfOnlyConfig = require('../lighthouse-core/config/perf.json');
 const pkg = require('../package.json');
+const Sentry = require('../lighthouse-core/lib/sentry');
 
 // accept noop modules for these, so the real dependency is optional.
 import {updateNotifier} from './shim-modules';
@@ -69,12 +70,18 @@ export async function run() {
     cliFlags.enableErrorReporting = await askPermission();
   }
 
-  return await runLighthouse(url, cliFlags, config, {
-    name: 'redacted', // prevent sentry from using hostname
-    environment: isDev() ? 'development' : 'production',
-    release: pkg.version,
-    tags: {
-      channel: 'cli',
+  Sentry.init({
+    url,
+    flags: cliFlags,
+    environmentData: {
+      name: 'redacted', // prevent sentry from using hostname
+      environment: isDev() ? 'development' : 'production',
+      release: pkg.version,
+      tags: {
+        channel: 'cli',
+      },
     },
   });
+
+  return await runLighthouse(url, cliFlags, config);
 }

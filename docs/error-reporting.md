@@ -17,6 +17,7 @@ Runtime exceptions will not be reported to the team. Your ability to use Lightho
 * The URL you tested
 * The runtime settings used (throttling enabled/disabled, emulation, etc)
 * The message, stack trace, and associated data of the error
+* The file path of Lighthouse node module on your machine
 * Your Lighthouse version
 * Your Chrome version
 * Your operating system

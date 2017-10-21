@@ -37,11 +37,11 @@ class Runner {
       return Promise.reject(err);
     }
 
-    const sentryContext = Sentry.init(opts);
+    const sentryContext = Sentry.getContext();
     Sentry.captureBreadcrumb({
       message: 'Run started',
       category: 'lifecycle',
-      data: sentryContext,
+      data: sentryContext && sentryContext.extra,
     });
 
     // If the URL isn't https and is also not localhost complain to the user.

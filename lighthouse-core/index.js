@@ -25,7 +25,7 @@ const Config = require('./config/config');
  *
  */
 
-module.exports = function(url, flags = {}, configJSON, environmentData) {
+module.exports = function(url, flags = {}, configJSON) {
   const startTime = Date.now();
   return Promise.resolve().then(_ => {
     // set logging preferences, assume quiet
@@ -38,7 +38,7 @@ module.exports = function(url, flags = {}, configJSON, environmentData) {
     const connection = new ChromeProtocol(flags.port, flags.hostname);
 
     // kick off a lighthouse run
-    return Runner.run(connection, {url, flags, config, environmentData})
+    return Runner.run(connection, {url, flags, config})
       .then(lighthouseResults => {
         // Annotate with time to run lighthouse.
         const endTime = Date.now();
