@@ -26,7 +26,6 @@ describe('CLI run', function() {
     const url = 'chrome://version';
     const filename = path.join(process.cwd(), 'run.ts.results.json');
     const flags = getFlags(`--output=json --output-path=${filename} ${url}`);
-    flags.enableErrorReporting = false;
     return run.runLighthouse(url, flags, fastConfig).then(passedResults => {
       assert.ok(fs.existsSync(filename));
       const results = JSON.parse(fs.readFileSync(filename, 'utf-8'));
