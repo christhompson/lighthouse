@@ -25,7 +25,7 @@ class MixedContent extends Audit {
       name: 'mixed-content',
       description: 'All resources loaded are secure',
       informative: true,
-      failureDescription: 'Some resources loaded are insecure',
+      failureDescription: 'Some insecure resources can be upgraded to HTTPS',
       helpText: `Mixed content warnings can prevent you from upgrading to HTTPS.
       This audit shows which insecure resources this page uses that can be
       upgraded to HTTPS. [Learn more]`,
@@ -36,7 +36,7 @@ class MixedContent extends Audit {
   /**
    * Checks whether the resource was securely loaded.
    * We special-case data: URLs, as they inherit the security state of their
-   * initiator, and so are trivially "upgradeable" for mixed-content purposes.
+   * referring document url, and so are trivially "upgradeable" for mixed-content purposes.
    *
    * @param {{scheme: string, protocol: string, securityState: function}} record
    * @return {boolean}
@@ -118,33 +118,31 @@ class MixedContent extends Audit {
       // Some resources are requested multiple times with different parameters
       // but we only want to show them to the user once.
       const seen = new Set();
-      const insecureUrls = insecureRecords.filter(record => {
-        const url = this.simplifyURL(record.url);
-        return seen.has(url) ? false : seen.add(url);
-      });
-
       const upgradeableResources = [];
-      insecureUrls.forEach(record => {
+
+      for (const record of insecureRecords) {
+        const simpleUrl = this.simplifyURL(record.url);
+        if (seen.has(simpleUrl)) continue;
+        seen.add(simpleUrl);
+
         const resource = {
           host: new URL(record.url).hostname,
           fullUrl: record.url,
-          initiator: this.displayURL(record._documentURL),
-          canUpgrade: 'No',
+          referrerDocUrl: this.displayURL(record._documentURL),
         };
-        if (upgradePassSecureHosts.has(resource.host) &&
-            resource.initiator.includes(baseHostname)) {
-          resource.canUpgrade = 'Yes';
-          upgradeableResources.push(resource);
-        }
-      });
+        // Exclude any records that aren't on an upgradeable secure host
+        if (!upgradePassSecureHosts.has(resource.host)) continue;
+        // Exclude iframe subresources
+        if (!resource.referrerDocUrl.includes(baseHostname)) continue;
+
+        upgradeableResources.push(resource);
+      }
 
       const displayValue = `${Util.formatNumber(upgradeableResources.length)}
-          ${upgradeableResources.length === 1 ? 'request' : 'requests'} can be
-          upgraded to HTTPS`;
+          ${upgradeableResources.length === 1 ? 'request' : 'requests'}`;
 
       const headings = [
-        {key: 'host', itemType: 'text', text: 'Hostname'},
-        {key: 'fullUrl', itemType: 'url', text: 'Full URL'},
+        {key: 'fullUrl', itemType: 'url', text: 'URL'},
       ];
       const details = Audit.makeTableDetails(headings, upgradeableResources);
 
