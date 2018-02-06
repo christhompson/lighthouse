@@ -40,8 +40,8 @@ function lighthouse(url, flags = {}, configJSON) {
     log.setLevel(flags.logLevel);
 
     // Use ConfigParser to generate a valid config file
-    const config = new Config(configJSON, flags.configPath);
-
+    const config = flags.mixedContent ? new Config(require('./config/mixed-content.js'), null)
+      : new Config(configJSON, flags.configPath);
     const connection = new ChromeProtocol(flags.port, flags.hostname);
 
     // kick off a lighthouse run
