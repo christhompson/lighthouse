@@ -81,7 +81,7 @@ function getFlags(manualArgv) {
         'additional-trace-categories':
             'Additional categories to capture with the trace (comma-delimited).',
         'config-path': 'The path to the config JSON.',
-        'mixed-content': 'Use the mixed-content auditing config.',
+        'mixed-content': 'Use the mixed-content auditing configuration.',
         'chrome-flags':
             `Custom flags to pass to Chrome (space-delimited). For a full list of flags, see http://bit.ly/chrome-flags
             Additionally, use the CHROME_PATH environment variable to use a specific Chrome binary. Requires Chromium version 54.0 or later. If omitted, any detected Chrome Canary or Chrome stable will be used.`,

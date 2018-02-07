@@ -60,6 +60,12 @@ if (cliFlags.configPath) {
   config = /** @type {!LH.Config} */ (perfOnlyConfig);
 } else if (cliFlags.mixedContent) {
   config = /** @type {!LH.Config} */ (mixedContentConfig);
+  // The mixed-content audits require headless Chrome (https://crbug.com/764505).
+  if (!cliFlags.chromeFlags) {
+    cliFlags.chromeFlags = '--headless';
+  } else {
+    cliFlags.chromeFlags = cliFlags.chromeFlags.concat(' --headless');
+  }
 }
 
 // set logging preferences
