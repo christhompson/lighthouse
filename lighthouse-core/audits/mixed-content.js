@@ -9,6 +9,9 @@ const Audit = require('./audit');
 const URL = require('../lib/url-shim');
 const Util = require('../report/v2/renderer/util');
 
+const SECURE_SCHEMES = ['data', 'https', 'wss', 'blob', 'chrome', 'chrome-extension'];
+const SECURE_DOMAINS = ['localhost', '127.0.0.1']
+
 /**
  * This audit checks which resources a page currently loads over HTTP which it
  * could instead load over HTTPS, and which resources are still HTTP only.
@@ -42,7 +45,9 @@ class MixedContent extends Audit {
    * @return {boolean}
    */
   static isSecureRecord(record) {
-    return record.securityState() === 'secure' || record.protocol === 'data';
+    return SECURE_SCHEMES.includes(record.scheme) ||
+           SECURE_SCHEMES.includes(record.protocol) ||
+           SECURE_DOMAINS.includes(record.domain);
   }
 
   /**
