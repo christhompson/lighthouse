@@ -8,6 +8,7 @@
  * @fileoverview Audit a page to find resources that should be improved for
  * Cross-Origin Read Blocking.
  */
+'use strict';
 
 const Audit = require('./audit');
 const URL = require('../lib/url-shim');
@@ -26,10 +27,11 @@ class CrossOriginReadBlocking extends Audit {
       name: 'corb',
       informative: true,
       description: 'All same-origin responses are correctly typed or set as nosniff',
-      failureDescription: 'Some same-origin responses may not be correctly blocked by Cross-Origin Read Blocking',
+      failureDescription: 'Some same-origin responses may not be correctly blocked by ' +
+          'Cross-Origin Read Blocking',
       helpText:
-        'Cross-Origin Read Blocking can help protect your site\'s sensitive resources. Ensuring your' +
-        'resources are served with the correct content types is a pre-requisite.',
+        'Cross-Origin Read Blocking can help protect your site\'s sensitive resources. Ensuring ' +
+        'your resources are served with the correct content types is a pre-requisite.',
       requiredArtifacts: ['devtoolsLogs', 'URL'],
     };
   }
@@ -59,7 +61,7 @@ class CrossOriginReadBlocking extends Audit {
    * @return boolean
    */
   static isSameOriginRecord(record, mainUrl) {
-    return URL.originsMatch(URL(record.url), URL(mainUrl));
+    return URL.originsMatch(new URL(record.url), new URL(mainUrl));
   }
 
   /**
@@ -77,7 +79,7 @@ class CrossOriginReadBlocking extends Audit {
 
       let displayValue = '';
       if (blockableRecords.length > 0) {
-        displayvalue = `${Util.formatNumber(blockableRecords.length)}
+        displayValue = `${Util.formatNumber(blockableRecords.length)}
           ${blockableRecords.length === 1 ? 'resource' : 'resources'}`;
       }
       const headings = [
